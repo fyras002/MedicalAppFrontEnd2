@@ -1,21 +1,23 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 <div class="dashboard-container">
   <aside class="sidebar">
     <div class="sidebar-header"><h2>MedicalApp</h2></div>
     <nav class="sidebar-nav">
-      <a routerLink="/admin/dashboard">Dashboard</a>
-      <a routerLink="/admin/users">Users</a>
-      <a routerLink="/admin/doctors">Doctors</a>
-      <a routerLink="/admin/specialities">Specialities</a>
-      <a routerLink="/admin/patients">Patients</a>
-      <a routerLink="/admin/appointments" routerLinkActive="active">Appointments</a>
-      <a routerLink="/admin/medical-records">Medical Records</a>
-      
+      <a routerLink="/admin/dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a routerLink="/admin/users"><i class="fas fa-users"></i> Users</a>
+      <a routerLink="/admin/doctors"><i class="fas fa-user-md"></i> Doctors</a>
+      <a routerLink="/admin/specialities"><i class="fas fa-stethoscope"></i> Specialities</a>
+      <a routerLink="/admin/patients"><i class="fas fa-heart"></i> Patients</a>
+      <a routerLink="/admin/appointments" routerLinkActive="active"><i class="fas fa-calendar-alt"></i> Appointments</a>
+      <a routerLink="/admin/medical-records"><i class="fas fa-file-medical-alt"></i> Medical Records</a>
     </nav>
-    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+    <div class="sidebar-footer"><button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
   </aside>
 
   <main class="main-content">
-    <header class="top-bar"><h1>All Appointments</h1><button (click)="showForm = !showForm">+ Add Appointment</button></header>
+    <header class="top-bar"><h1>All Appointments</h1><button (click)="showForm = !showForm"><i class="fas fa-plus"></i> Add Appointment</button></header>
     <div class="content-area">
       <div class="form-card" *ngIf="showForm">
         <h3>New Appointment</h3>

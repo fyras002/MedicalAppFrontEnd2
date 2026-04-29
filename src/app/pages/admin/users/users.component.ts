@@ -27,10 +27,17 @@ export class AdminUsersComponent implements OnInit {
 
   deleteUser(id: number) {
     if (confirm('Delete this user?')) {
-      this.http.delete(`${this.baseUrl}/Users/${id}`).subscribe(() => this.loadUsers());
+        this.http.delete(`${this.baseUrl}/Users/${id}`).subscribe({
+            next: () => {
+                this.loadUsers();
+            },
+            error: (err) => {
+                console.error('Delete failed:', err);
+                alert('Cannot delete this user. They may be linked to a doctor or patient record. Delete those first.');
+            }
+        });
     }
   }
-
   getRoleName(role: number): string {
     if (role === 1) return 'Admin';
     if (role === 2) return 'Doctor';

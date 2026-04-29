@@ -1,31 +1,40 @@
-// ============================================================
-// CarePlus – Admin Dashboard SCSS
-// Brand: #007BFF blue · white/light-gray backgrounds · clean medical feel
-// ============================================================
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap');
 
-// --------------- Variables ---------------
 $brand:          #007BFF;
 $brand-dark:     #0056CC;
 $brand-light:    #E8F4FF;
-$sidebar-bg:     #0A1F44;
-$sidebar-hover:  rgba(255, 255, 255, 0.10);
-$sidebar-active: rgba(0, 123, 255, 0.35);
-$white:          #FFFFFF;
-$bg-page:        #F4F7FB;
-$text-primary:   #1A2B4A;
-$text-secondary: #6B7A99;
-$text-muted:     #A0ABBE;
-$border-color:   #E8ECF4;
-$shadow-sm:      0 2px 8px  rgba(0, 0, 0, 0.06);
-$shadow-md:      0 4px 20px rgba(0, 0, 0, 0.09);
-$shadow-card:    0 2px 16px rgba(0, 123, 255, 0.08);
-$radius-sm:      8px;
-$radius-md:      12px;
-$radius-lg:      16px;
-$sidebar-w:      260px;
-$transition:     0.22s ease;
+$card-blue:      #3B82F6;
+$card-teal:      #3B82F6;
+$card-coral:     #3B82F6;
+$card-violet:    #3B82F6;
 
-// --------------- Mixins ---------------
+$sidebar-bg:            #0F1E3C;
+$sidebar-hover:         rgba(255, 255, 255, 0.08);
+$sidebar-active-bg:     rgba(59, 130, 246, 0.20);
+$sidebar-active-border: #3B82F6;
+$sidebar-text:          rgba(255, 255, 255, 0.68);
+$sidebar-text-active:   #FFFFFF;
+
+$white:          #FFFFFF;
+$bg-page:        #F3F6FB;
+$text-primary:   #12213D;
+$text-secondary: #64748B;
+$text-muted:     #94A3B8;
+$border-color:   #E2E8F4;
+
+$shadow-xs:         0 1px 4px  rgba(15, 30, 60, 0.06);
+$shadow-sm:         0 2px 10px rgba(15, 30, 60, 0.08);
+$shadow-md:         0 6px 24px rgba(15, 30, 60, 0.12);
+$shadow-card:       0 2px 14px rgba(59, 130, 246, 0.07);
+$shadow-card-hover: 0 8px 28px rgba(59, 130, 246, 0.13);
+
+$radius-sm:   8px;
+$radius-md:   14px;
+$radius-lg:   20px;
+$sidebar-w:   256px;
+$topbar-h:    68px;
+$transition:  0.22s cubic-bezier(0.4, 0, 0.2, 1);
+
 @mixin flex($align: center, $justify: flex-start, $gap: 0) {
   display: flex;
   align-items: $align;
@@ -46,20 +55,16 @@ $transition:     0.22s ease;
   @if $bp == small   { @media (max-width: 480px)  { @content; } }
 }
 
-// ============================================================
-// Layout shell
-// ============================================================
+*, *::before, *::after { box-sizing: border-box; }
+
 .dashboard-container {
   display: flex;
   min-height: 100vh;
   background: $bg-page;
-  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
   color: $text-primary;
 }
 
-// ============================================================
-// Sidebar
-// ============================================================
 .sidebar {
   width: $sidebar-w;
   background: $sidebar-bg;
@@ -70,44 +75,49 @@ $transition:     0.22s ease;
   top: 0;
   left: 0;
   height: 100vh;
-  z-index: 100;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
-  transition: transform $transition;
+  z-index: 200;
+  transition: transform $transition, box-shadow $transition;
 
   &::after {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    width: 3px;
+    width: 2px;
     height: 100%;
-    background: linear-gradient(180deg, $brand 0%, transparent 100%);
-    opacity: 0.7;
+    background: linear-gradient(180deg, $brand 0%, rgba($brand, 0.1) 70%, transparent 100%);
+    opacity: 0.8;
   }
 
   .sidebar-header {
-    padding: 28px 24px 22px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 24px 22px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    @include flex(center, flex-start, 10px);
 
     h2 {
       margin: 0;
-      font-size: 19px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
       color: $white;
+
+      &::before {
+        content: '✚ ';
+        color: $brand;
+        font-size: 16px;
+      }
     }
   }
 
   .sidebar-nav {
     flex: 1;
-    padding: 16px 0;
+    padding: 18px 0 12px;
     overflow-y: auto;
 
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
+    &::-webkit-scrollbar { width: 3px; }
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.12);
       border-radius: 4px;
     }
 
@@ -115,14 +125,15 @@ $transition:     0.22s ease;
       display: flex;
       align-items: center;
       gap: 10px;
-      color: rgba(255, 255, 255, 0.72);
+      color: $sidebar-text;
       text-decoration: none;
-      padding: 11px 20px;
-      margin: 2px 12px;
+      padding: 11px 18px 11px 20px;
+      margin: 2px 10px;
       border-radius: $radius-sm;
       font-size: 14px;
       font-weight: 500;
       transition: background $transition, color $transition, padding-left $transition;
+      position: relative;
 
       &:hover {
         background: $sidebar-hover;
@@ -131,52 +142,81 @@ $transition:     0.22s ease;
       }
 
       &.active {
-        background: $sidebar-active;
-        color: $white;
+        background: $sidebar-active-bg;
+        color: $sidebar-text-active;
         font-weight: 600;
-        box-shadow: inset 3px 0 0 $brand;
         padding-left: 24px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 6px;
+          bottom: 6px;
+          width: 3px;
+          background: $sidebar-active-border;
+          border-radius: 0 3px 3px 0;
+        }
       }
     }
   }
 
   .sidebar-footer {
-    padding: 18px 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
 
     button {
       width: 100%;
       padding: 11px 16px;
-      background: rgba(255, 255, 255, 0.07);
-      color: rgba(255, 255, 255, 0.80);
+      background: transparent;
+      color: rgba(255, 255, 255, 0.65);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: $radius-sm;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.1px;
       transition: background $transition, color $transition, border-color $transition;
 
       &:hover {
-        background: rgba(220, 53, 69, 0.22);
-        color: #FF6B7A;
-        border-color: rgba(220, 53, 69, 0.35);
+        background: rgba(244, 63, 94, 0.15);
+        color: #FB7185;
+        border-color: rgba(244, 63, 94, 0.30);
       }
+
+      &:active { transform: scale(0.98); }
     }
   }
 
   @include responsive(mobile) {
     transform: translateX(-100%);
     width: 240px;
+    box-shadow: none;
 
     &.open {
       transform: translateX(0);
+      box-shadow: 8px 0 40px rgba(0, 0, 0, 0.28);
     }
   }
 }
 
-// ============================================================
-// Main content
-// ============================================================
+@include responsive(mobile) {
+  .sidebar.open ~ .main-content::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 20, 40, 0.45);
+    z-index: 150;
+    animation: fadeIn 0.2s ease;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 .main-content {
   flex: 1;
   margin-left: $sidebar-w;
@@ -184,145 +224,267 @@ $transition:     0.22s ease;
   flex-direction: column;
   min-height: 100vh;
 
-  @include responsive(mobile) {
-    margin-left: 0;
-  }
+  @include responsive(mobile) { margin-left: 0; }
 }
 
-// ============================================================
-// Top bar
-// ============================================================
 .top-bar {
   background: $white;
-  padding: 18px 32px;
+  padding: 0 32px;
+  height: $topbar-h;
   @include flex(center, space-between);
-  box-shadow: $shadow-sm;
+  box-shadow: $shadow-xs;
   border-bottom: 1px solid $border-color;
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 100;
 
   h1 {
     margin: 0;
-    font-size: 20px;
-    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    font-size: 19px;
+    font-weight: 800;
     color: $text-primary;
-    letter-spacing: -0.3px;
+    letter-spacing: -0.4px;
+
+    &::before {
+      content: 'Admin › ';
+      font-weight: 500;
+      color: $text-muted;
+      font-size: 14px;
+    }
   }
 
   @include responsive(mobile) {
-    padding: 16px 20px;
+    padding: 0 18px;
+    height: 58px;
 
     h1 {
-      font-size: 18px;
+      font-size: 16px;
+      &::before { display: none; }
     }
   }
 }
 
-// ============================================================
-// Content area
-// ============================================================
 .content-area {
-  padding: 32px;
+  padding: 30px 32px 40px;
   flex: 1;
 
-  @include responsive(tablet) {
-    padding: 24px;
-  }
-  @include responsive(mobile) {
-    padding: 16px;
-  }
+  @include responsive(tablet) { padding: 24px; }
+  @include responsive(mobile) { padding: 16px 14px 32px; }
 }
 
-// ============================================================
-// Stats grid
-// ============================================================
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 
-  @include responsive(small) {
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
+  @include responsive(tablet) { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @include responsive(small) { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
-  @media (max-width: 380px) {
-    grid-template-columns: 1fr;
-  }
+  @media (max-width: 380px) { grid-template-columns: 1fr; gap: 12px; }
 }
 
-// ============================================================
-// Stat card – all unified with brand blue
-// ============================================================
+$card-accents: (
+  1: ($card-blue,   rgba(59, 130, 246, 0.10)),
+  2: ($card-teal,   rgba(59, 130, 246, 0.10)),
+  3: ($card-coral,  rgba(59, 130, 246, 0.10)),
+  4: ($card-violet, rgba(59, 130, 246, 0.10)),
+);
+
 .stat-card {
   @include card;
-  padding: 26px 24px 22px;
+  padding: 22px;
   position: relative;
   overflow: hidden;
+  cursor: default;
   transition: transform $transition, box-shadow $transition;
 
-  // Decorative top accent bar – brand blue
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-card-hover;
+  }
+
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, $brand 0%, #66B2FF 100%);
+    top: 0; left: 0; right: 0;
+    height: 3.5px;
     border-radius: $radius-md $radius-md 0 0;
   }
 
-  // Soft watermark circle – brand light
   &::after {
     content: '';
     position: absolute;
-    bottom: -24px;
-    right: -24px;
-    width: 80px;
-    height: 80px;
-    background: $brand-light;
+    bottom: -30px; right: -30px;
+    width: 90px; height: 90px;
     border-radius: 50%;
-    opacity: 0.55;
+    opacity: 0.40;
+    transition: opacity $transition;
+    z-index: 0;
   }
 
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: $shadow-md;
-  }
+  &:hover::after { opacity: 0.60; }
 
   h3 {
-    margin: 0 0 12px;
-    color: $text-secondary;
-    font-size: 13px;
-    font-weight: 600;
+    margin: 0 0 8px;
+    font-size: 11.5px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.8px;
+    color: $text-secondary;
     position: relative;
     z-index: 1;
   }
 
   .stat-number {
     margin: 0;
-    color: $brand;
+    font-family: 'Nunito', sans-serif;
     font-size: 38px;
     font-weight: 800;
     line-height: 1;
-    letter-spacing: -1px;
+    letter-spacing: -1.5px;
     position: relative;
     z-index: 1;
   }
 
+  @each $n, $vals in $card-accents {
+    $color:  nth($vals, 1);
+    $circle: nth($vals, 2);
+
+    &:nth-child(#{$n}) {
+      &::before { background: linear-gradient(90deg, $color 0%, lighten($color, 18%) 100%); }
+      &::after { background: $circle; }
+      .stat-number { color: $color; }
+    }
+  }
+
   @include responsive(small) {
-    padding: 20px 18px;
+    padding: 18px 14px 16px;
+    .stat-number { font-size: 30px; }
+    h3 { font-size: 11px; }
+  }
 
-    .stat-number {
-      font-size: 30px;
-    }
+  @media (max-width: 380px) {
+    padding: 20px 16px 18px;
+    .stat-number { font-size: 34px; }
+  }
+}
 
-    h3 {
-      font-size: 12px;
-    }
+.stat-icon {
+  position: absolute;
+  top: 18px; right: 18px;
+  width: 52px; height: 52px;
+  border-radius: $radius-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: transform $transition;
+
+  .stat-card:hover & { transform: scale(1.08); }
+
+  i { font-size: 24px; line-height: 1; }
+
+  &--blue { background: rgba(59, 130, 246, 0.12); i { color: $card-blue; } }
+
+  @include responsive(small) {
+    width: 42px; height: 42px;
+    top: 14px; right: 14px;
+    i { font-size: 20px; }
+  }
+}
+
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 28px;
+
+  @include responsive(tablet) { grid-template-columns: 1fr; }
+}
+
+.recent-activity {
+  @include card;
+  padding: 22px;
+
+  h2 {
+    margin: 0 0 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: $text-primary;
+  }
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #F1F5F9;
+
+  &:last-child { border-bottom: none; padding-bottom: 0; }
+  &:first-child { padding-top: 0; }
+}
+
+.activity-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  i { font-size: 15px; color: #3B82F6; }
+}
+
+.activity-text {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-primary;
+  line-height: 1.4;
+}
+
+.activity-time {
+  font-size: 11px;
+  font-weight: 500;
+  color: $text-muted;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.no-activity {
+  .activity-icon { background: rgba(148, 163, 184, 0.1); i { color: $text-muted; } }
+  .activity-text { color: $text-muted; }
+}
+
+.placeholder-widget {
+  @include card;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+
+  h2 {
+    margin: 0 0 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: $text-primary;
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: $text-muted;
   }
 }

@@ -1,26 +1,83 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 <div class="dashboard-container">
   <aside class="sidebar">
     <div class="sidebar-header"><h2>MedicalApp</h2></div>
     <nav class="sidebar-nav">
-      <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-      <a routerLink="/admin/users" routerLinkActive="active">Users</a>
-      <a routerLink="/admin/doctors" routerLinkActive="active">Doctors</a>
-      <a routerLink="/admin/specialities" routerLinkActive="active">Specialities</a>
-      <a routerLink="/admin/patients">Patients</a>
-      <a routerLink="/admin/appointments">Appointments</a>
-      <a routerLink="/admin/medical-records">Medical Records</a>
+      <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <i class="fas fa-chart-pie"></i> Dashboard
+      </a>
+      <a routerLink="/admin/users" routerLinkActive="active">
+        <i class="fas fa-users"></i> Users
+      </a>
+      <a routerLink="/admin/doctors" routerLinkActive="active">
+        <i class="fas fa-user-md"></i> Doctors
+      </a>
+      <a routerLink="/admin/specialities" routerLinkActive="active">
+        <i class="fas fa-stethoscope"></i> Specialities
+      </a>
+      <a routerLink="/admin/patients">
+        <i class="fas fa-heart"></i> Patients
+      </a>
+      <a routerLink="/admin/appointments">
+        <i class="fas fa-calendar-alt"></i> Appointments
+      </a>
+      <a routerLink="/admin/medical-records">
+        <i class="fas fa-file-medical-alt"></i> Medical Records
+      </a>
     </nav>
-    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+    <div class="sidebar-footer"><button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
   </aside>
 
   <main class="main-content">
-    <header class="top-bar"><h1>Admin Dashboard</h1></header>
+    <header class="top-bar"><h1>Dashboard</h1></header>
     <div class="content-area">
       <div class="stats-grid">
-        <div class="stat-card"><h3>Total Users</h3><p class="stat-number">{{ totalUsers }}</p></div>
-        <div class="stat-card"><h3>Doctors</h3><p class="stat-number">{{ totalDoctors }}</p></div>
-        <div class="stat-card"><h3>Patients</h3><p class="stat-number">{{ totalPatients }}</p></div>
-        <div class="stat-card"><h3>Appointments</h3><p class="stat-number">{{ totalAppointments }}</p></div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--blue"><i class="fas fa-users"></i></div>
+          <h3>Total Users</h3>
+          <p class="stat-number">{{ totalUsers }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--blue"><i class="fas fa-user-md"></i></div>
+          <h3>Doctors</h3>
+          <p class="stat-number">{{ totalDoctors }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--blue"><i class="fas fa-heart"></i></div>
+          <h3>Patients</h3>
+          <p class="stat-number">{{ totalPatients }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--blue"><i class="fas fa-calendar-alt"></i></div>
+          <h3>Appointments</h3>
+          <p class="stat-number">{{ totalAppointments }}</p>
+        </div>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="recent-activity">
+          <h2>Recent Activity</h2>
+          <div class="activity-list">
+            <div class="activity-item" *ngFor="let activity of recentActivities">
+              <div class="activity-icon">
+                <i class="fas {{ activity.icon }}"></i>
+              </div>
+              <div class="activity-text">{{ activity.text }}</div>
+              <div class="activity-time">{{ activity.time }}</div>
+            </div>
+            <div class="activity-item no-activity" *ngIf="recentActivities.length === 0">
+              <div class="activity-icon"><i class="fas fa-info-circle"></i></div>
+              <div class="activity-text">No recent activity</div>
+              <div class="activity-time"></div>
+            </div>
+          </div>
+        </div>
+        <div class="placeholder-widget">
+          <h2>Coming Soon</h2>
+          <p>More stats here</p>
+        </div>
       </div>
     </div>
   </main>

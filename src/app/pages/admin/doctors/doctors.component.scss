@@ -1,35 +1,45 @@
-// ============================================================
-// CarePlus – Admin Doctors SCSS
-// Brand: #007BFF blue · white/light-gray backgrounds · clean medical feel
-// ============================================================
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap');
 
-// --------------- Variables ---------------
 $brand:          #007BFF;
 $brand-dark:     #0056CC;
 $brand-light:    #E8F4FF;
-$sidebar-bg:     #0A1F44;
-$sidebar-hover:  rgba(255, 255, 255, 0.10);
-$sidebar-active: rgba(0, 123, 255, 0.35);
-$white:          #FFFFFF;
-$bg-page:        #F4F7FB;
-$text-primary:   #1A2B4A;
-$text-secondary: #6B7A99;
-$text-muted:     #A0ABBE;
-$border-color:   #E8ECF4;
-$shadow-sm:      0 2px 8px  rgba(0, 0, 0, 0.06);
-$shadow-md:      0 4px 20px rgba(0, 0, 0, 0.09);
-$shadow-card:    0 2px 16px rgba(0, 123, 255, 0.08);
-$radius-sm:      8px;
-$radius-md:      12px;
-$radius-lg:      16px;
-$sidebar-w:      260px;
-$transition:     0.22s ease;
-$success:        #28A745;
-$danger:         #DC3545;
-$danger-hover:   #C82333;
-$input-bg:       #FAFBFC;
 
-// --------------- Mixins ---------------
+$card-blue:      #3B82F6;
+$card-teal:      #3B82F6;
+$card-coral:     #3B82F6;
+$card-violet:    #3B82F6;
+
+$sidebar-bg:            #0F1E3C;
+$sidebar-hover:         rgba(255, 255, 255, 0.08);
+$sidebar-active-bg:     rgba(59, 130, 246, 0.20);
+$sidebar-active-border: #3B82F6;
+$sidebar-text:          rgba(255, 255, 255, 0.68);
+$sidebar-text-active:   #FFFFFF;
+
+$white:          #FFFFFF;
+$bg-page:        #F3F6FB;
+$text-primary:   #12213D;
+$text-secondary: #64748B;
+$text-muted:     #94A3B8;
+$border-color:   #E2E8F4;
+
+$shadow-xs:         0 1px 4px  rgba(15, 30, 60, 0.06);
+$shadow-sm:         0 2px 10px rgba(15, 30, 60, 0.08);
+$shadow-md:         0 6px 24px rgba(15, 30, 60, 0.12);
+$shadow-card:       0 2px 14px rgba(59, 130, 246, 0.07);
+$shadow-card-hover: 0 8px 28px rgba(59, 130, 246, 0.13);
+
+$radius-sm:   8px;
+$radius-md:   14px;
+$radius-lg:   20px;
+$sidebar-w:   256px;
+$topbar-h:    68px;
+$transition:  0.22s cubic-bezier(0.4, 0, 0.2, 1);
+
+$success:      #28A745;
+$success-dark: #218838;
+$danger:       #DC3545;
+
 @mixin flex($align: center, $justify: flex-start, $gap: 0) {
   display: flex;
   align-items: $align;
@@ -49,12 +59,12 @@ $input-bg:       #FAFBFC;
   padding: 11px 14px;
   border: 1px solid $border-color;
   border-radius: $radius-sm;
-  background: $input-bg;
+  background: $white;
   font-size: 14px;
   color: $text-primary;
   box-sizing: border-box;
   transition: border-color $transition, box-shadow $transition, background $transition;
-  font-family: inherit;
+  font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
 
   &:focus {
     outline: none;
@@ -75,20 +85,18 @@ $input-bg:       #FAFBFC;
   @if $bp == small   { @media (max-width: 480px)  { @content; } }
 }
 
-// ============================================================
-// Layout shell
-// ============================================================
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 .dashboard-container {
   display: flex;
   min-height: 100vh;
   background: $bg-page;
-  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
   color: $text-primary;
 }
 
-// ============================================================
-// Sidebar
-// ============================================================
 .sidebar {
   width: $sidebar-w;
   background: $sidebar-bg;
@@ -99,44 +107,49 @@ $input-bg:       #FAFBFC;
   top: 0;
   left: 0;
   height: 100vh;
-  z-index: 100;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
-  transition: transform $transition;
+  z-index: 200;
+  transition: transform $transition, box-shadow $transition;
 
   &::after {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    width: 3px;
+    width: 2px;
     height: 100%;
-    background: linear-gradient(180deg, $brand 0%, transparent 100%);
-    opacity: 0.7;
+    background: linear-gradient(180deg, $brand 0%, rgba($brand, 0.1) 70%, transparent 100%);
+    opacity: 0.8;
   }
 
   .sidebar-header {
-    padding: 28px 24px 22px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 24px 22px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    @include flex(center, flex-start, 10px);
 
     h2 {
       margin: 0;
-      font-size: 19px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
       color: $white;
+
+      &::before {
+        content: '✚ ';
+        color: $brand;
+        font-size: 16px;
+      }
     }
   }
 
   .sidebar-nav {
     flex: 1;
-    padding: 16px 0;
+    padding: 18px 0 12px;
     overflow-y: auto;
 
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
+    &::-webkit-scrollbar { width: 3px; }
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.12);
       border-radius: 4px;
     }
 
@@ -144,14 +157,15 @@ $input-bg:       #FAFBFC;
       display: flex;
       align-items: center;
       gap: 10px;
-      color: rgba(255, 255, 255, 0.72);
+      color: $sidebar-text;
       text-decoration: none;
-      padding: 11px 20px;
-      margin: 2px 12px;
+      padding: 11px 18px 11px 20px;
+      margin: 2px 10px;
       border-radius: $radius-sm;
       font-size: 14px;
       font-weight: 500;
       transition: background $transition, color $transition, padding-left $transition;
+      position: relative;
 
       &:hover {
         background: $sidebar-hover;
@@ -160,35 +174,52 @@ $input-bg:       #FAFBFC;
       }
 
       &.active {
-        background: $sidebar-active;
-        color: $white;
+        background: $sidebar-active-bg;
+        color: $sidebar-text-active;
         font-weight: 600;
-        box-shadow: inset 3px 0 0 $brand;
         padding-left: 24px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 6px;
+          bottom: 6px;
+          width: 3px;
+          background: $sidebar-active-border;
+          border-radius: 0 3px 3px 0;
+        }
       }
     }
   }
 
   .sidebar-footer {
-    padding: 18px 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
 
     button {
       width: 100%;
       padding: 11px 16px;
-      background: rgba(255, 255, 255, 0.07);
-      color: rgba(255, 255, 255, 0.80);
+      background: transparent;
+      color: rgba(255, 255, 255, 0.65);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: $radius-sm;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.1px;
+      @include flex(center, center, 8px);
       transition: background $transition, color $transition, border-color $transition;
 
       &:hover {
-        background: rgba(220, 53, 69, 0.22);
-        color: #FF6B7A;
-        border-color: rgba(220, 53, 69, 0.35);
+        background: rgba(244, 63, 94, 0.15);
+        color: #FB7185;
+        border-color: rgba(244, 63, 94, 0.30);
+      }
+
+      &:active {
+        transform: scale(0.98);
       }
     }
   }
@@ -196,16 +227,31 @@ $input-bg:       #FAFBFC;
   @include responsive(mobile) {
     transform: translateX(-100%);
     width: 240px;
+    box-shadow: none;
 
     &.open {
       transform: translateX(0);
+      box-shadow: 8px 0 40px rgba(0, 0, 0, 0.28);
     }
   }
 }
 
-// ============================================================
-// Main content
-// ============================================================
+@include responsive(mobile) {
+  .sidebar.open ~ .main-content::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 20, 40, 0.45);
+    z-index: 150;
+    animation: fadeIn 0.2s ease;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 .main-content {
   flex: 1;
   margin-left: $sidebar-w;
@@ -218,27 +264,31 @@ $input-bg:       #FAFBFC;
   }
 }
 
-// ============================================================
-// Top bar
-// ============================================================
 .top-bar {
   background: $white;
-  padding: 18px 32px;
+  padding: 0 32px;
+  height: $topbar-h;
   @include flex(center, space-between);
-  box-shadow: $shadow-sm;
+  box-shadow: $shadow-xs;
   border-bottom: 1px solid $border-color;
   position: sticky;
   top: 0;
-  z-index: 50;
-  flex-wrap: wrap;
-  gap: 12px;
+  z-index: 100;
 
   h1 {
     margin: 0;
-    font-size: 20px;
-    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    font-size: 19px;
+    font-weight: 800;
     color: $text-primary;
-    letter-spacing: -0.3px;
+    letter-spacing: -0.4px;
+
+    &::before {
+      content: 'Admin › ';
+      font-weight: 500;
+      color: $text-muted;
+      font-size: 14px;
+    }
   }
 
   button {
@@ -251,7 +301,7 @@ $input-bg:       #FAFBFC;
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    font-family: inherit;
+    font-family: 'DM Sans', sans-serif;
     white-space: nowrap;
     transition: background $transition, transform $transition, box-shadow $transition;
     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.25);
@@ -268,12 +318,18 @@ $input-bg:       #FAFBFC;
   }
 
   @include responsive(mobile) {
-    padding: 16px 20px;
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 0 18px;
+    height: auto;
+    min-height: 58px;
+    flex-wrap: wrap;
+    gap: 12px;
 
     h1 {
-      font-size: 18px;
+      font-size: 16px;
+
+      &::before {
+        display: none;
+      }
     }
 
     button {
@@ -283,24 +339,19 @@ $input-bg:       #FAFBFC;
   }
 }
 
-// ============================================================
-// Content area
-// ============================================================
 .content-area {
-  padding: 32px;
+  padding: 30px 32px 40px;
   flex: 1;
 
   @include responsive(tablet) {
     padding: 24px;
   }
+
   @include responsive(mobile) {
-    padding: 16px;
+    padding: 16px 14px 32px;
   }
 }
 
-// ============================================================
-// Form card
-// ============================================================
 .form-card {
   @include card;
   padding: 28px 32px;
@@ -309,9 +360,11 @@ $input-bg:       #FAFBFC;
 
   h3 {
     margin: 0 0 24px;
+    font-family: 'Nunito', sans-serif;
     font-size: 17px;
-    font-weight: 700;
+    font-weight: 800;
     color: $text-primary;
+    letter-spacing: -0.3px;
     padding-bottom: 16px;
     border-bottom: 1px solid $border-color;
   }
@@ -322,7 +375,7 @@ $input-bg:       #FAFBFC;
   }
 
   input[type="password"] {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23A0ABBE' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'%3E%3C/path%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'%3E%3C/path%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: left 14px center;
     padding-left: 42px;
@@ -343,7 +396,7 @@ $input-bg:       #FAFBFC;
     margin-bottom: 12px;
     cursor: pointer;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7A99' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
     padding-right: 36px;
@@ -370,13 +423,13 @@ $input-bg:       #FAFBFC;
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    font-family: inherit;
+    font-family: 'DM Sans', sans-serif;
     margin-top: 8px;
     transition: background $transition, transform $transition, box-shadow $transition;
     box-shadow: 0 2px 8px rgba(40, 167, 69, 0.25);
 
     &:hover {
-      background: darken($success, 8%);
+      background: $success-dark;
       transform: translateY(-1px);
       box-shadow: 0 4px 14px rgba(40, 167, 69, 0.35);
     }
@@ -407,9 +460,6 @@ $input-bg:       #FAFBFC;
   }
 }
 
-// ============================================================
-// Table
-// ============================================================
 table {
   @include card;
   width: 100%;
@@ -427,10 +477,10 @@ table {
     text-align: left;
     padding: 14px 20px;
     color: $text-secondary;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.8px;
     border-bottom: 2px solid $border-color;
     white-space: nowrap;
 
@@ -439,6 +489,8 @@ table {
     }
     &:last-child {
       border-radius: 0 $radius-md 0 0;
+      text-align: center;
+      width: 100px;
     }
   }
 
@@ -465,18 +517,15 @@ table {
     color: $text-primary;
     vertical-align: middle;
 
-    // Name column emphasis
     &:first-child {
       font-weight: 600;
     }
 
-    // Actions column
     &:last-child {
       text-align: center;
     }
   }
 
-  // Delete button
   button {
     padding: 7px 16px;
     background: $white;
