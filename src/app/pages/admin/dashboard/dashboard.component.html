@@ -31,7 +31,72 @@
   </aside>
 
   <main class="main-content">
-    <header class="top-bar"><h1>Dashboard</h1></header>
+    <header class="top-bar">
+      <h1>Dashboard</h1>
+      <div class="top-bar-right">
+        <div class="notification-wrapper">
+          <button class="notification-bell" (click)="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" *ngIf="recentActivities.length > 0">{{ recentActivities.length }}</span>
+          </button>
+          <div class="notification-dropdown" *ngIf="showNotifications">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <span class="notification-count">{{ recentActivities.length }} new</span>
+            </div>
+            <div class="notification-list">
+              <div class="notification-item" *ngFor="let activity of recentActivities">
+                <div class="notification-icon" [style.background]="activity.iconBg">
+                  <i class="fas {{ activity.icon }}" [style.color]="activity.iconColor"></i>
+                </div>
+                <div class="notification-content">
+                  <p>{{ activity.text }}</p>
+                  <span>{{ activity.time }}</span>
+                </div>
+              </div>
+              <div class="notification-item empty" *ngIf="recentActivities.length === 0">
+                <p>No new notifications</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-wrapper">
+          <button class="profile-trigger" (click)="toggleProfileMenu()">
+            <div class="profile-avatar">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="profile-info">
+              <span class="profile-name">{{ adminName }}</span>
+              <span class="profile-role">Admin</span>
+            </div>
+            <i class="fas fa-chevron-down profile-arrow"></i>
+          </button>
+          <div class="profile-dropdown" *ngIf="showProfileMenu">
+            <div class="profile-header">
+              <div class="profile-avatar-large">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <div class="profile-details">
+                <h4>{{ adminName }}</h4>
+                <p>{{ adminEmail }}</p>
+              </div>
+            </div>
+            <div class="profile-menu-items">
+              <a routerLink="/admin/dashboard" (click)="showProfileMenu = false">
+                <i class="fas fa-user-circle"></i> My Profile
+              </a>
+              <a routerLink="/admin/dashboard" (click)="showProfileMenu = false">
+                <i class="fas fa-cog"></i> Settings
+              </a>
+              <button (click)="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
     <div class="content-area">
       <div class="stats-grid">
         <div class="stat-card">
@@ -61,8 +126,8 @@
           <h2>Recent Activity</h2>
           <div class="activity-list">
             <div class="activity-item" *ngFor="let activity of recentActivities">
-              <div class="activity-icon">
-                <i class="fas {{ activity.icon }}"></i>
+              <div class="activity-icon" [style.background]="activity.iconBg">
+                <i class="fas {{ activity.icon }}" [style.color]="activity.iconColor"></i>
               </div>
               <div class="activity-text">{{ activity.text }}</div>
               <div class="activity-time">{{ activity.time }}</div>

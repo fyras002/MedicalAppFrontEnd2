@@ -18,6 +18,10 @@ export class DoctorDashboardComponent implements OnInit {
   todayAppointments: any[] = [];
   totalPatients = 0;
   pendingConsultations = 0;
+  showNotifications = false;
+  showProfileMenu = false;
+  doctorName = '';
+  doctorEmail = '';
 
   constructor(
     private authService: AuthService,
@@ -28,6 +32,8 @@ export class DoctorDashboardComponent implements OnInit {
   ngOnInit() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.username = user.lastname || 'Doctor';
+    this.doctorName = `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Doctor';
+    this.doctorEmail = user.email || '';
     this.loadDoctorData(user.id);
   }
 
@@ -76,6 +82,16 @@ export class DoctorDashboardComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) this.showProfileMenu = false;
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) this.showNotifications = false;
   }
 
   logout() {

@@ -16,6 +16,10 @@ export class AdminDoctorsComponent implements OnInit {
   doctors: any[] = [];
   specialities: any[] = [];
   showForm = false;
+  showNotifications = false;
+  showProfileMenu = false;
+  adminName = 'Admin User';
+  adminEmail = 'admin@medicalapp.com';
   private baseUrl = 'http://localhost:5039/api';
 
   newDoctor = {
@@ -23,12 +27,35 @@ export class AdminDoctorsComponent implements OnInit {
     specialityId: null, licenseNumber: '', biography: '', yearsOfExperience: null
   };
 
-  constructor(private authService: AuthService, private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  ngOnInit() { this.loadDoctors(); this.loadSpecialities(); }
+  ngOnInit() {
+    const user = this.authService.getUser();
+    if (user.firstname) {
+      this.adminName = `${user.firstname} ${user.lastname}`;
+      this.adminEmail = user.email || 'admin@medicalapp.com';
+    }
+    this.loadDoctors();
+    this.loadSpecialities();
+  }
 
-  loadDoctors() { this.http.get<any[]>(`${this.baseUrl}/Doctors`).subscribe(d => { this.doctors = d; this.cdr.detectChanges(); }); }
-  loadSpecialities() { this.http.get<any[]>(`${this.baseUrl}/Specialities`).subscribe(s => { this.specialities = s; this.cdr.detectChanges(); }); }
+  loadDoctors() {
+    this.http.get<any[]>(`${this.baseUrl}/Doctors`).subscribe(d => {
+      this.doctors = d;
+      this.cdr.detectChanges();
+    });
+  }
+
+  loadSpecialities() {
+    this.http.get<any[]>(`${this.baseUrl}/Specialities`).subscribe(s => {
+      this.specialities = s;
+      this.cdr.detectChanges();
+    });
+  }
 
   createDoctor() {
     this.http.post(`${this.baseUrl}/Users`, {
@@ -41,7 +68,10 @@ export class AdminDoctorsComponent implements OnInit {
           userId: user.id, specialityId: this.newDoctor.specialityId,
           licenseNumber: this.newDoctor.licenseNumber, biography: this.newDoctor.biography,
           yearsOfExperience: this.newDoctor.yearsOfExperience, isAvailable: true
-        }).subscribe(() => { this.showForm = false; this.loadDoctors(); });
+        }).subscribe(() => {
+          this.showForm = false;
+          this.loadDoctors();
+        });
       }
     });
   }
@@ -50,6 +80,16 @@ export class AdminDoctorsComponent implements OnInit {
     if (confirm('Delete this doctor?')) {
       this.http.delete(`${this.baseUrl}/Doctors/${id}`).subscribe(() => this.loadDoctors());
     }
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) this.showProfileMenu = false;
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) this.showNotifications = false;
   }
 
   logout() { this.authService.logout(); }

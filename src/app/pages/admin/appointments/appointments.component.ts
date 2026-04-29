@@ -19,6 +19,10 @@ export class AdminAppointmentsComponent implements OnInit {
   companies: any[] = [];
   showForm = false;
   editingAppointment: any = null;
+  showNotifications = false;
+  showProfileMenu = false;
+  adminName = 'Admin User';
+  adminEmail = 'admin@medicalapp.com';
   private baseUrl = 'http://localhost:5039/api';
 
   newAppointment = {
@@ -27,9 +31,18 @@ export class AdminAppointmentsComponent implements OnInit {
     idPatient: null, idDoctor: null, idCompany: null, isNewPatient: false
   };
 
-  constructor(private authService: AuthService, private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
+    const user = this.authService.getUser();
+    if (user.firstname) {
+      this.adminName = `${user.firstname} ${user.lastname}`;
+      this.adminEmail = user.email || 'admin@medicalapp.com';
+    }
     this.loadAll();
   }
 
@@ -42,10 +55,7 @@ export class AdminAppointmentsComponent implements OnInit {
 
   createAppointment() {
     this.http.post(`${this.baseUrl}/Appointments`, this.newAppointment).subscribe({
-      next: () => {
-        this.showForm = false;
-        this.loadAll();
-      }
+      next: () => { this.showForm = false; this.loadAll(); }
     });
   }
 
@@ -66,5 +76,16 @@ export class AdminAppointmentsComponent implements OnInit {
   }
 
   cancelEdit() { this.editingAppointment = null; }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) this.showProfileMenu = false;
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) this.showNotifications = false;
+  }
+
   logout() { this.authService.logout(); }
 }

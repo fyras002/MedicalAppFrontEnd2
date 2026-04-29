@@ -16,6 +16,10 @@ export class AdminPatientsComponent implements OnInit {
   patients: any[] = [];
   showForm = false;
   editingPatient: any = null;
+  showNotifications = false;
+  showProfileMenu = false;
+  adminName = 'Admin User';
+  adminEmail = 'admin@medicalapp.com';
   private baseUrl = 'http://localhost:5039/api';
 
   newPatient = {
@@ -30,6 +34,11 @@ export class AdminPatientsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const user = this.authService.getUser();
+    if (user.firstname) {
+      this.adminName = `${user.firstname} ${user.lastname}`;
+      this.adminEmail = user.email || 'admin@medicalapp.com';
+    }
     this.loadPatients();
   }
 
@@ -76,6 +85,16 @@ export class AdminPatientsComponent implements OnInit {
 
   cancelEdit() {
     this.editingPatient = null;
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) this.showProfileMenu = false;
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) this.showNotifications = false;
   }
 
   logout() {

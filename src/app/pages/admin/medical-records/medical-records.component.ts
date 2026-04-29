@@ -17,13 +17,28 @@ export class AdminMedicalRecordsComponent implements OnInit {
   patients: any[] = [];
   showForm = false;
   editingRecord: any = null;
+  showNotifications = false;
+  showProfileMenu = false;
+  adminName = 'Admin User';
+  adminEmail = 'admin@medicalapp.com';
   private baseUrl = 'http://localhost:5039/api';
 
   newRecord = { idPatient: null, bloodDraw: '', height: '', weight: '', medicalCheckup: '', hereditaryDiseases: '', chronicDiseases: '', status: 'Active' };
 
-  constructor(private authService: AuthService, private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  ngOnInit() { this.loadAll(); }
+  ngOnInit() {
+    const user = this.authService.getUser();
+    if (user.firstname) {
+      this.adminName = `${user.firstname} ${user.lastname}`;
+      this.adminEmail = user.email || 'admin@medicalapp.com';
+    }
+    this.loadAll();
+  }
 
   loadAll() {
     this.http.get<any[]>(`${this.baseUrl}/MedicalRecords`).subscribe(r => { this.medicalRecords = r; this.cdr.detectChanges(); });
@@ -51,5 +66,16 @@ export class AdminMedicalRecordsComponent implements OnInit {
   }
 
   cancelEdit() { this.editingRecord = null; }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) this.showProfileMenu = false;
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) this.showNotifications = false;
+  }
+
   logout() { this.authService.logout(); }
 }

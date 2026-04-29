@@ -15,6 +15,10 @@ import { AuthService } from '../../../services/auth.service';
 export class AdminSpecialitiesComponent implements OnInit {
   specialities: any[] = [];
   showForm = false;
+  showNotifications = false;
+  showProfileMenu = false;
+  adminName = 'Admin User';
+  adminEmail = 'admin@medicalapp.com';
   newSpeciality = { specialityName: null, description: '' };
   private baseUrl = 'http://localhost:5039/api';
 
@@ -25,6 +29,11 @@ export class AdminSpecialitiesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const user = this.authService.getUser();
+    if (user.firstname) {
+      this.adminName = `${user.firstname} ${user.lastname}`;
+      this.adminEmail = user.email || 'admin@medicalapp.com';
+    }
     this.loadSpecialities();
   }
 
@@ -54,6 +63,16 @@ export class AdminSpecialitiesComponent implements OnInit {
         error: () => alert('Cannot delete. It may have doctors linked.')
       });
     }
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) this.showProfileMenu = false;
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) this.showNotifications = false;
   }
 
   logout() {

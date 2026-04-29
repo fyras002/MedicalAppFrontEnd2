@@ -18,6 +18,10 @@ export class AdminDashboardComponent implements OnInit {
   totalAppointments = 0;
   
   recentActivities: any[] = [];
+  showNotifications = false;
+  showProfileMenu = false;
+  adminName = 'Admin User';
+  adminEmail = 'admin@medicalapp.com';
   
   private baseUrl = 'http://localhost:5039/api';
 
@@ -28,6 +32,11 @@ export class AdminDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const user = this.authService.getUser();
+    if (user.firstname) {
+      this.adminName = `${user.firstname} ${user.lastname}`;
+      this.adminEmail = user.email || 'admin@medicalapp.com';
+    }
     this.loadStats();
   }
 
@@ -59,20 +68,24 @@ export class AdminDashboardComponent implements OnInit {
     const activities: any[] = [];
     
     this.http.get<any[]>(`${this.baseUrl}/Patients`).subscribe(patients => {
-      patients.slice(0, 3).forEach(p => {
+      patients.slice(0, 3).forEach((p, index) => {
         activities.push({
           icon: 'fa-user-plus',
+          iconBg: 'rgba(16, 185, 129, 0.12)',
+          iconColor: '#10B981',
           text: `${p.firstname} ${p.lastname} registered as patient`,
-          time: this.getTimeAgo(new Date())
+          timeValue: new Date().getTime() - (index * 3600000)
         });
       });
       
       this.http.get<any[]>(`${this.baseUrl}/Doctors`).subscribe(doctors => {
-        doctors.slice(0, 2).forEach(d => {
+        doctors.slice(0, 2).forEach((d, index) => {
           activities.push({
             icon: 'fa-user-md',
+            iconBg: 'rgba(59, 130, 246, 0.12)',
+            iconColor: '#3B82F6',
             text: `Dr. ${d.fullName} joined as ${d.specialityName}`,
-            time: this.getTimeAgo(new Date())
+            timeValue: new Date().getTime() - ((index + 1) * 7200000)
           });
         });
         
@@ -84,8 +97,10 @@ export class AdminDashboardComponent implements OnInit {
           sorted.slice(0, 3).forEach(a => {
             activities.push({
               icon: 'fa-calendar-check',
+              iconBg: 'rgba(245, 158, 11, 0.12)',
+              iconColor: '#F59E0B',
               text: `Appointment: ${a.patientName || 'Unknown'} → Dr. ${a.doctorFullName || 'N/A'}`,
-              time: this.getTimeAgo(new Date(a.dateTimeAppointment))
+              timeValue: new Date(a.dateTimeAppointment).getTime()
             });
           });
           
@@ -97,12 +112,19 @@ export class AdminDashboardComponent implements OnInit {
             sortedCons.slice(0, 2).forEach(c => {
               activities.push({
                 icon: 'fa-notes-medical',
+                iconBg: 'rgba(139, 92, 246, 0.12)',
+                iconColor: '#8B5CF6',
                 text: `Consultation: ${c.patientFullName || 'Patient'} with Dr. ${c.doctorFullName || 'N/A'}`,
-                time: this.getTimeAgo(new Date(c.myDateTime))
+                timeValue: new Date(c.myDateTime).getTime()
               });
             });
             
             activities.sort((a, b) => b.timeValue - a.timeValue);
+            
+            activities.forEach(a => {
+              a.time = this.getTimeAgo(new Date(a.timeValue));
+            });
+            
             this.recentActivities = activities.slice(0, 6);
             this.cdr.detectChanges();
           });
@@ -123,6 +145,20 @@ export class AdminDashboardComponent implements OnInit {
     if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
     if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
     return date.toLocaleDateString();
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      this.showProfileMenu = false;
+    }
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) {
+      this.showNotifications = false;
+    }
   }
 
   logout() { this.authService.logout(); }
