@@ -1,0 +1,27 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header"><h2>MedicalApp</h2></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      <a routerLink="/admin/users" routerLinkActive="active">Users</a>
+      <a routerLink="/admin/doctors" routerLinkActive="active">Doctors</a>
+      <a routerLink="/admin/specialities" routerLinkActive="active">Specialities</a>
+      <a routerLink="/admin/patients">Patients</a>
+      <a routerLink="/admin/appointments">Appointments</a>
+      <a routerLink="/admin/medical-records">Medical Records</a>
+    </nav>
+    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar"><h1>Admin Dashboard</h1></header>
+    <div class="content-area">
+      <div class="stats-grid">
+        <div class="stat-card"><h3>Total Users</h3><p class="stat-number">{{ totalUsers }}</p></div>
+        <div class="stat-card"><h3>Doctors</h3><p class="stat-number">{{ totalDoctors }}</p></div>
+        <div class="stat-card"><h3>Patients</h3><p class="stat-number">{{ totalPatients }}</p></div>
+        <div class="stat-card"><h3>Appointments</h3><p class="stat-number">{{ totalAppointments }}</p></div>
+      </div>
+    </div>
+  </main>
+</div>

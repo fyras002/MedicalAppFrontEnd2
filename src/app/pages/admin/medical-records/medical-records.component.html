@@ -1,0 +1,53 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header"><h2>MedicalApp</h2></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard">Dashboard</a>
+      <a routerLink="/admin/users">Users</a>
+      <a routerLink="/admin/doctors">Doctors</a>
+      <a routerLink="/admin/patients">Patients</a>
+      <a routerLink="/admin/specialities">Specialities</a>
+      <a routerLink="/admin/appointments">Appointments</a>
+      <a routerLink="/admin/medical-records" routerLinkActive="active">Medical Records</a>
+      
+    </nav>
+    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar"><h1>Medical Records</h1><button (click)="showForm = !showForm">+ Add Record</button></header>
+    <div class="content-area">
+      <div class="form-card" *ngIf="showForm">
+        <h3>New Medical Record</h3>
+        <select [(ngModel)]="newRecord.idPatient"><option [ngValue]="null">Select Patient</option><option *ngFor="let p of patients" [ngValue]="p.idPatient">{{ p.firstname }} {{ p.lastname }}</option></select>
+        <input [(ngModel)]="newRecord.bloodDraw" placeholder="Blood Type" />
+        <div class="form-row"><input [(ngModel)]="newRecord.height" placeholder="Height" /><input [(ngModel)]="newRecord.weight" placeholder="Weight" /></div>
+        <input [(ngModel)]="newRecord.medicalCheckup" placeholder="Medical Checkup" />
+        <input [(ngModel)]="newRecord.hereditaryDiseases" placeholder="Hereditary Diseases" />
+        <input [(ngModel)]="newRecord.chronicDiseases" placeholder="Chronic Diseases" />
+        <button (click)="createRecord()">Create Record</button>
+      </div>
+
+      <div class="edit-card" *ngIf="editingRecord">
+        <h3>Edit Record</h3>
+        <input [(ngModel)]="editingRecord.bloodDraw" placeholder="Blood Type" />
+        <input [(ngModel)]="editingRecord.height" placeholder="Height" />
+        <input [(ngModel)]="editingRecord.weight" placeholder="Weight" />
+        <input [(ngModel)]="editingRecord.medicalCheckup" placeholder="Checkup" />
+        <div class="btn-row"><button class="btn-save" (click)="updateRecord()">Save</button><button class="btn-cancel" (click)="cancelEdit()">Cancel</button></div>
+      </div>
+
+      <div class="records-grid">
+        <div class="record-card" *ngFor="let r of medicalRecords">
+          <h3>{{ r.patientFullName }}</h3>
+          <p>Blood: {{ r.bloodDraw || 'N/A' }} | Height: {{ r.height || 'N/A' }} | Weight: {{ r.weight || 'N/A' }}</p>
+          <p>Status: <span class="status active">{{ r.status }}</span></p>
+          <div class="btn-row">
+            <button class="btn-edit" (click)="editRecord(r)">Edit</button>
+            <button class="btn-delete" (click)="deleteRecord(r.idMedicalRecord)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

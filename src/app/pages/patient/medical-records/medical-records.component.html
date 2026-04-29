@@ -1,0 +1,35 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header"><h2>MedicalApp</h2></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/patient/dashboard">Dashboard</a>
+      <a routerLink="/patient/appointments">My Appointments</a>
+      <a routerLink="/patient/medical-records" routerLinkActive="active">Medical Records</a>
+    </nav>
+    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar"><h1>My Medical Record</h1></header>
+
+    <div class="content-area">
+      <div class="record-card" *ngIf="medicalRecord">
+        <h2>{{ medicalRecord.patientFullName }}</h2>
+        <div class="record-grid">
+          <div class="record-item"><strong>Blood Type</strong><span>{{ medicalRecord.bloodDraw || 'N/A' }}</span></div>
+          <div class="record-item"><strong>Height</strong><span>{{ medicalRecord.height || 'N/A' }}</span></div>
+          <div class="record-item"><strong>Weight</strong><span>{{ medicalRecord.weight || 'N/A' }}</span></div>
+          <div class="record-item"><strong>Checkup</strong><span>{{ medicalRecord.medicalCheckup || 'N/A' }}</span></div>
+          <div class="record-item"><strong>Chronic Diseases</strong><span>{{ medicalRecord.chronicDiseases || 'None' }}</span></div>
+          <div class="record-item"><strong>Hereditary Diseases</strong><span>{{ medicalRecord.hereditaryDiseases || 'None' }}</span></div>
+          <div class="record-item"><strong>Status</strong><span class="status active">{{ medicalRecord.status }}</span></div>
+        </div>
+        <div class="documents" *ngIf="medicalRecord.documents && medicalRecord.documents.length > 0">
+          <h3>Documents</h3>
+          <p *ngFor="let doc of medicalRecord.documents">{{ doc.titleDocument }} ({{ doc.dateDocument | date:'mediumDate' }})</p>
+        </div>
+      </div>
+      <p *ngIf="!medicalRecord" class="no-data">No medical record found</p>
+    </div>
+  </main>
+</div>

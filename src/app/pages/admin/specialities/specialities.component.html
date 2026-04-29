@@ -1,0 +1,50 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header"><h2>MedicalApp</h2></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard">Dashboard</a>
+      <a routerLink="/admin/users">Users</a>
+      <a routerLink="/admin/doctors">Doctors</a>
+      <a routerLink="/admin/specialities" routerLinkActive="active">Specialities</a>
+      <a routerLink="/admin/patients">Patients</a>
+      <a routerLink="/admin/appointments">Appointments</a>
+      <a routerLink="/admin/medical-records">Medical Records</a>
+    </nav>
+    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <h1>Specialities</h1>
+      <button (click)="showForm = !showForm">+ Add Speciality</button>
+    </header>
+
+    <div class="content-area">
+      <div class="form-card" *ngIf="showForm">
+        <h3>Add Speciality</h3>
+        <select [(ngModel)]="newSpeciality.specialityName">
+          <option [ngValue]="null">Select Speciality</option>
+          <option [ngValue]="1">Cardiology</option>
+          <option [ngValue]="2">Dermatology</option>
+          <option [ngValue]="3">Neurology</option>
+          <option [ngValue]="4">Pediatrics</option>
+          <option [ngValue]="5">Radiology</option>
+          <option [ngValue]="6">General Medicine</option>
+          <option [ngValue]="7">Orthopedics</option>
+          <option [ngValue]="8">Psychiatry</option>
+        </select>
+        <input [(ngModel)]="newSpeciality.description" placeholder="Description" />
+        <button (click)="createSpeciality()">Create Speciality</button>
+      </div>
+
+      <div class="speciality-grid">
+        <div class="speciality-card" *ngFor="let s of specialities">
+          <h3>{{ s.specialityName }}</h3>
+          <p>{{ s.description || 'No description' }}</p>
+          <p><strong>Doctors:</strong> {{ s.doctors?.length || 0 }}</p>
+          <button (click)="deleteSpeciality(s.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

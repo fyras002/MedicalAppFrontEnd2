@@ -1,0 +1,33 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header"><h2>MedicalApp</h2></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard">Dashboard</a>
+      <a routerLink="/admin/users" routerLinkActive="active">Users</a>
+      <a routerLink="/admin/doctors">Doctors</a>
+      <a routerLink="/admin/specialities">Specialities</a>
+      <a routerLink="/admin/patients" >Patients</a>
+      <a routerLink="/admin/appointments">Appointments</a>
+      <a routerLink="/admin/medical-records">Medical Records</a>
+    </nav>
+    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+  </aside>
+  <main class="main-content">
+    <header class="top-bar"><h1>All Users</h1></header>
+    <div class="content-area">
+      <table class="user-table">
+        <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Name</th><th>Role</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.firstname }} {{ user.lastname }}</td>
+            <td>{{ getRoleName(user.role) }}</td>
+            <td><button class="btn-delete" (click)="deleteUser(user.id)">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>

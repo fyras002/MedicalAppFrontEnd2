@@ -1,0 +1,76 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header"><h2>MedicalApp</h2></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard">Dashboard</a>
+      <a routerLink="/admin/users">Users</a>
+      <a routerLink="/admin/doctors">Doctors</a>
+      <a routerLink="/admin/specialities">Specialities</a>
+      <a routerLink="/admin/patients" routerLinkActive="active">Patients</a>
+      <a routerLink="/admin/appointments">Appointments</a>
+      <a routerLink="/admin/medical-records">Medical Records</a>
+    </nav>
+    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <h1>Patients</h1>
+      <button (click)="showForm = !showForm">+ Add Patient</button>
+    </header>
+
+    <div class="content-area">
+      <div class="form-card" *ngIf="showForm">
+        <h3>Add New Patient</h3>
+        <div class="form-row">
+          <input [(ngModel)]="newPatient.firstname" placeholder="First Name" />
+          <input [(ngModel)]="newPatient.lastname" placeholder="Last Name" />
+        </div>
+        <input [(ngModel)]="newPatient.email" placeholder="Email" />
+        <input [(ngModel)]="newPatient.phone" placeholder="Phone" />
+        <input [(ngModel)]="newPatient.birthdate" type="date" />
+        <input [(ngModel)]="newPatient.cin" placeholder="CIN" />
+        <input [(ngModel)]="newPatient.address" placeholder="Address" />
+        <button (click)="createPatient()">Create Patient</button>
+      </div>
+
+      <div class="edit-card" *ngIf="editingPatient">
+        <h3>Edit Patient</h3>
+        <div class="form-row">
+          <input [(ngModel)]="editingPatient.firstname" placeholder="First Name" />
+          <input [(ngModel)]="editingPatient.lastname" placeholder="Last Name" />
+        </div>
+        <input [(ngModel)]="editingPatient.email" placeholder="Email" />
+        <input [(ngModel)]="editingPatient.phone" placeholder="Phone" />
+        <input [(ngModel)]="editingPatient.cin" placeholder="CIN" />
+        <input [(ngModel)]="editingPatient.address" placeholder="Address" />
+        <div class="btn-row">
+          <button class="btn-save" (click)="updatePatient()">Save</button>
+          <button class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>CIN</th><th>Active</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of patients">
+            <td>{{ p.idPatient }}</td>
+            <td>{{ p.firstname }} {{ p.lastname }}</td>
+            <td>{{ p.email }}</td>
+            <td>{{ p.phone }}</td>
+            <td>{{ p.cin }}</td>
+            <td>{{ p.active ? 'yes' : 'no' }}</td>
+            <td>
+              <button class="btn-edit" (click)="editPatient(p)">Edit</button>
+              <button class="btn-delete" (click)="deletePatient(p.idPatient)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>

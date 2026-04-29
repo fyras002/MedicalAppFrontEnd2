@@ -1,0 +1,36 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>MedicalApp</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/doctor/dashboard">Dashboard</a>
+      <a routerLink="/doctor/appointments">My Appointments</a>
+      <a routerLink="/doctor/patients" routerLinkActive="active">My Patients</a>
+      <a routerLink="/doctor/consultations">Consultations</a>
+      <a routerLink="/doctor/medical-records">Medical Records</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button (click)="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <h1>My Patients</h1>
+    </header>
+
+    <div class="content-area">
+      <div class="patients-grid">
+        <div class="patient-card" *ngFor="let patient of patients">
+          <h3>{{ patient.firstname }} {{ patient.lastname }}</h3>
+          <p>{{ patient.phone || 'N/A' }}</p>
+          <p>{{ patient.email || 'N/A' }}</p>
+          <p>{{ patient.birthdate | date:'mediumDate' }}</p>
+          <button class="btn-view" (click)="viewMedicalRecord(patient)">View Medical Record</button>
+        </div>
+      </div>
+      <p *ngIf="patients.length === 0" class="no-data">No patients found</p>
+    </div>
+  </main>
+</div>

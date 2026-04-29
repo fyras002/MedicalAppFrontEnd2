@@ -1,0 +1,35 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header"><h2>MedicalApp</h2></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard">Dashboard</a>
+      <a routerLink="/admin/users">Users</a>
+      <a routerLink="/admin/doctors" routerLinkActive="active">Doctors</a>
+      <a routerLink="/admin/specialities">Specialities</a>
+      <a routerLink="/admin/patients">Patients</a>
+      <a routerLink="/admin/appointments">Appointments</a>
+      <a routerLink="/admin/medical-records">Medical Records</a>
+    </nav>
+    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+  </aside>
+  <main class="main-content">
+    <header class="top-bar"><h1>Doctors</h1><button (click)="showForm = !showForm">+ Add Doctor</button></header>
+    <div class="content-area">
+      <div class="form-card" *ngIf="showForm">
+        <h3>Create Doctor</h3>
+        <div class="form-row"><input [(ngModel)]="newDoctor.firstname" placeholder="First Name" /><input [(ngModel)]="newDoctor.lastname" placeholder="Last Name" /></div>
+        <input [(ngModel)]="newDoctor.username" placeholder="Username" />
+        <input [(ngModel)]="newDoctor.email" placeholder="Email" />
+        <input [(ngModel)]="newDoctor.password" type="password" placeholder="Password" />
+        <select [(ngModel)]="newDoctor.specialityId"><option value="">Select Speciality</option><option *ngFor="let s of specialities" [value]="s.id">{{ s.specialityName }}</option></select>
+        <input [(ngModel)]="newDoctor.licenseNumber" placeholder="License Number" />
+        <input [(ngModel)]="newDoctor.biography" placeholder="Biography" />
+        <input [(ngModel)]="newDoctor.yearsOfExperience" type="number" placeholder="Years of Experience" />
+        <button (click)="createDoctor()">Create Doctor</button>
+      </div>
+      <table><thead><tr><th>Name</th><th>Speciality</th><th>License</th><th>Actions</th></tr></thead>
+        <tbody><tr *ngFor="let d of doctors"><td>{{ d.fullName }}</td><td>{{ d.specialityName }}</td><td>{{ d.licenseNumber }}</td><td><button (click)="deleteDoctor(d.id)">Delete</button></td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</div>

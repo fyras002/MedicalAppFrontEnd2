@@ -1,0 +1,460 @@
+// ============================================================
+// CarePlus – Patient Medical Record SCSS
+// Brand: #007BFF blue · white/light-gray backgrounds · clean medical feel
+// ============================================================
+
+// --------------- Variables ---------------
+$brand:          #007BFF;
+$brand-dark:     #0056CC;
+$brand-light:    #E8F4FF;
+$sidebar-bg:     #0A1F44;
+$sidebar-hover:  rgba(255, 255, 255, 0.10);
+$sidebar-active: rgba(0, 123, 255, 0.35);
+$white:          #FFFFFF;
+$bg-page:        #F4F7FB;
+$text-primary:   #1A2B4A;
+$text-secondary: #6B7A99;
+$text-muted:     #A0ABBE;
+$border-color:   #E8ECF4;
+$shadow-sm:      0 2px 8px  rgba(0, 0, 0, 0.06);
+$shadow-md:      0 4px 20px rgba(0, 0, 0, 0.09);
+$shadow-card:    0 2px 16px rgba(0, 123, 255, 0.08);
+$radius-sm:      8px;
+$radius-md:      12px;
+$radius-lg:      16px;
+$sidebar-w:      260px;
+$transition:     0.22s ease;
+$success:        #28A745;
+$success-light:  #E6F9EE;
+$warning:        #FFC107;
+$warning-light:  #FFF8E1;
+$danger:         #DC3545;
+$danger-light:   #FFE5E8;
+
+// --------------- Mixins ---------------
+@mixin flex($align: center, $justify: flex-start, $gap: 0) {
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
+  @if $gap != 0 { gap: $gap; }
+}
+
+@mixin card {
+  background: $white;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  border: 1px solid $border-color;
+}
+
+@mixin responsive($bp) {
+  @if $bp == tablet  { @media (max-width: 1024px) { @content; } }
+  @if $bp == mobile  { @media (max-width: 768px)  { @content; } }
+  @if $bp == small   { @media (max-width: 480px)  { @content; } }
+}
+
+// ============================================================
+// Layout shell
+// ============================================================
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background: $bg-page;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color: $text-primary;
+}
+
+// ============================================================
+// Sidebar
+// ============================================================
+.sidebar {
+  width: $sidebar-w;
+  background: $sidebar-bg;
+  color: $white;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
+  transition: transform $transition;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, $brand 0%, transparent 100%);
+    opacity: 0.7;
+  }
+
+  .sidebar-header {
+    padding: 28px 24px 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    h2 {
+      margin: 0;
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: $white;
+    }
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 0;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.72);
+      text-decoration: none;
+      padding: 11px 20px;
+      margin: 2px 12px;
+      border-radius: $radius-sm;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background $transition, color $transition, padding-left $transition;
+
+      &:hover {
+        background: $sidebar-hover;
+        color: $white;
+        padding-left: 24px;
+      }
+
+      &.active {
+        background: $sidebar-active;
+        color: $white;
+        font-weight: 600;
+        box-shadow: inset 3px 0 0 $brand;
+        padding-left: 24px;
+      }
+    }
+  }
+
+  .sidebar-footer {
+    padding: 18px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    button {
+      width: 100%;
+      padding: 11px 16px;
+      background: rgba(255, 255, 255, 0.07);
+      color: rgba(255, 255, 255, 0.80);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: $radius-sm;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background $transition, color $transition, border-color $transition;
+
+      &:hover {
+        background: rgba(220, 53, 69, 0.22);
+        color: #FF6B7A;
+        border-color: rgba(220, 53, 69, 0.35);
+      }
+    }
+  }
+
+  @include responsive(mobile) {
+    transform: translateX(-100%);
+    width: 240px;
+
+    &.open {
+      transform: translateX(0);
+    }
+  }
+}
+
+// ============================================================
+// Main content
+// ============================================================
+.main-content {
+  flex: 1;
+  margin-left: $sidebar-w;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  @include responsive(mobile) {
+    margin-left: 0;
+  }
+}
+
+// ============================================================
+// Top bar
+// ============================================================
+.top-bar {
+  background: $white;
+  padding: 18px 32px;
+  @include flex(center, space-between);
+  box-shadow: $shadow-sm;
+  border-bottom: 1px solid $border-color;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -0.3px;
+  }
+
+  @include responsive(mobile) {
+    padding: 16px 20px;
+
+    h1 {
+      font-size: 18px;
+    }
+  }
+}
+
+// ============================================================
+// Content area
+// ============================================================
+.content-area {
+  padding: 32px;
+  flex: 1;
+
+  @include responsive(tablet) {
+    padding: 24px;
+  }
+  @include responsive(mobile) {
+    padding: 16px;
+  }
+}
+
+// ============================================================
+// Record card
+// ============================================================
+.record-card {
+  @include card;
+  padding: 32px;
+  max-width: 750px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.35s ease;
+
+  // Left accent bar for clinical feel
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, $brand 0%, #66B2FF 60%, transparent 100%);
+    border-radius: $radius-md 0 0 $radius-md;
+  }
+
+  // Subtle background icon
+  &::after {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 140px;
+    height: 140px;
+    background: $brand-light;
+    border-radius: 50%;
+    opacity: 0.4;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  // Patient name heading
+  h2 {
+    margin: 0 0 28px;
+    font-size: 20px;
+    font-weight: 700;
+    color: $text-primary;
+    position: relative;
+    z-index: 1;
+    padding-bottom: 16px;
+    border-bottom: 1px solid $border-color;
+    letter-spacing: -0.3px;
+  }
+
+  // Grid layout for record items
+  .record-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+
+    @include responsive(small) {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }
+
+  .record-item {
+    padding: 16px 18px;
+    background: $bg-page;
+    border-radius: $radius-sm;
+    border: 1px solid $border-color;
+    transition: background $transition, border-color $transition;
+
+    &:hover {
+      background: $brand-light;
+      border-color: rgba(0, 123, 255, 0.2);
+    }
+
+    strong {
+      display: block;
+      color: $text-secondary;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    span {
+      color: $text-primary;
+      font-size: 15px;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    // Status badge inside record item
+    .status {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      &.active {
+        background: $success-light;
+        color: #1A7A40;
+      }
+
+      &.inactive {
+        background: $danger-light;
+        color: #B71C1C;
+      }
+
+      &.pending {
+        background: $warning-light;
+        color: #B86000;
+      }
+    }
+  }
+
+  // Documents section
+  .documents {
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid $border-color;
+    position: relative;
+    z-index: 1;
+
+    h3 {
+      margin: 0 0 14px;
+      font-size: 15px;
+      font-weight: 700;
+      color: $text-primary;
+    }
+
+    p {
+      margin: 0 0 8px;
+      color: $brand;
+      font-size: 13px;
+      font-weight: 500;
+      @include flex(center, flex-start, 8px);
+      padding: 6px 0;
+      transition: color $transition;
+      cursor: default;
+
+      &:hover {
+        color: $brand-dark;
+      }
+
+      // Document icon already included via emoji in HTML
+    }
+  }
+
+  @include responsive(mobile) {
+    padding: 24px 20px;
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: 22px;
+    }
+
+    .record-item {
+      padding: 14px 16px;
+
+      span {
+        font-size: 14px;
+      }
+    }
+
+    .documents {
+      margin-top: 22px;
+      padding-top: 18px;
+    }
+  }
+}
+
+// ============================================================
+// Card entrance animation
+// ============================================================
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================================
+// No data state
+// ============================================================
+.no-data {
+  text-align: center;
+  color: $text-muted;
+  padding: 60px 20px;
+  font-size: 15px;
+  font-style: italic;
+
+  &::before {
+    content: '📋';
+    display: block;
+    font-size: 32px;
+    margin-bottom: 14px;
+    font-style: normal;
+  }
+
+  @include responsive(mobile) {
+    padding: 40px 16px;
+    font-size: 14px;
+
+    &::before {
+      font-size: 26px;
+    }
+  }
+}

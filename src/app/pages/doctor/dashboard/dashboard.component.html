@@ -1,0 +1,83 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>MedicalApp</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/doctor/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        Dashboard
+      </a>
+      <a routerLink="/doctor/appointments" routerLinkActive="active">
+        My Appointments
+      </a>
+      <a routerLink="/doctor/patients" routerLinkActive="active">
+        My Patients
+      </a>
+      <a routerLink="/doctor/consultations" routerLinkActive="active">
+        Consultations
+      </a>
+      <a routerLink="/doctor/medical-records" routerLinkActive="active">
+        Medical Records
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button (click)="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <h1>Welcome, Dr. {{ username }}</h1>
+      <div class="user-info">
+        <span>{{ speciality }}</span>
+        <span class="badge">Available</span>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Today's Appointments</h3>
+          <p class="stat-number">{{ todayAppointments.length }}</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Patients</h3>
+          <p class="stat-number">{{ totalPatients }}</p>
+        </div>
+        <div class="stat-card">
+          <h3>Pending Consultations</h3>
+          <p class="stat-number">{{ pendingConsultations }}</p>
+        </div>
+        <div class="stat-card">
+          <h3>Years of Experience</h3>
+          <p class="stat-number">{{ yearsOfExperience }}</p>
+        </div>
+      </div>
+
+      <div class="today-appointments">
+        <h2>Today's Appointments</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Patient</th>
+              <th>Phone</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let app of todayAppointments">
+              <td>{{ app.dateTimeAppointment | date:'shortTime' }}</td>
+              <td>{{ app.patientName }}</td>
+              <td>{{ app.patientPhone }}</td>
+              <td>{{ app.reason }}</td>
+            </tr>
+            <tr *ngIf="todayAppointments.length === 0">
+              <td colspan="4" class="no-data">No appointments scheduled for today</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
