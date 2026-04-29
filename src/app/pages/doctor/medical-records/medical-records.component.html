@@ -1,27 +1,82 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 <div class="dashboard-container">
   <aside class="sidebar">
     <div class="sidebar-header"><h2>MedicalApp</h2></div>
     <nav class="sidebar-nav">
-      <a routerLink="/doctor/dashboard">Dashboard</a>
-      <a routerLink="/doctor/appointments">My Appointments</a>
-      <a routerLink="/doctor/patients">My Patients</a>
-      <a routerLink="/doctor/consultations">Consultations</a>
-      <a routerLink="/doctor/medical-records" routerLinkActive="active">Medical Records</a>
+      <a routerLink="/doctor/dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a routerLink="/doctor/appointments"><i class="fas fa-calendar-alt"></i> My Appointments</a>
+      <a routerLink="/doctor/patients"><i class="fas fa-heart"></i> My Patients</a>
+      <a routerLink="/doctor/consultations"><i class="fas fa-notes-medical"></i> Consultations</a>
+      <a routerLink="/doctor/medical-records" routerLinkActive="active"><i class="fas fa-file-medical-alt"></i> Medical Records</a>
     </nav>
-    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+    <div class="sidebar-footer"><button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
   </aside>
 
   <main class="main-content">
     <header class="top-bar">
       <h1>Medical Records</h1>
-      <button *ngIf="selectedPatientId" class="btn-back" (click)="selectedPatientId = null; loadMedicalRecords()">
-        ← All Records
-      </button>
+      <div class="top-bar-right">
+        <div class="notification-wrapper">
+          <button class="notification-bell" (click)="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" *ngIf="medicalRecords.length > 0">{{ medicalRecords.length }}</span>
+          </button>
+          <div class="notification-dropdown" *ngIf="showNotifications">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <span class="notification-count">{{ medicalRecords.length }} records</span>
+            </div>
+            <div class="notification-list">
+              <div class="notification-item" *ngIf="medicalRecords.length > 0">
+                <div class="notification-icon" style="background: rgba(59, 130, 246, 0.12);">
+                  <i class="fas fa-file-medical-alt" style="color: #3B82F6;"></i>
+                </div>
+                <div class="notification-content">
+                  <p>{{ medicalRecords.length }} medical records available</p>
+                  <span>Total count</span>
+                </div>
+              </div>
+              <div class="notification-item empty" *ngIf="medicalRecords.length === 0">
+                <p>No medical records</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-wrapper">
+          <button class="profile-trigger" (click)="toggleProfileMenu()">
+            <div class="profile-avatar"><i class="fas fa-user-md"></i></div>
+            <div class="profile-info">
+              <span class="profile-name">{{ doctorName }}</span>
+              <span class="profile-role">{{ speciality }}</span>
+            </div>
+            <i class="fas fa-chevron-down profile-arrow"></i>
+          </button>
+          <div class="profile-dropdown" *ngIf="showProfileMenu">
+            <div class="profile-header">
+              <div class="profile-avatar-large"><i class="fas fa-user-md"></i></div>
+              <div class="profile-details"><h4>{{ doctorName }}</h4><p>{{ doctorEmail }}</p></div>
+            </div>
+            <div class="profile-menu-items">
+              <a routerLink="/doctor/dashboard" (click)="showProfileMenu = false"><i class="fas fa-user-circle"></i> My Profile</a>
+              <button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+          </div>
+        </div>
+
+        <span class="availability-badge"><i class="fas fa-circle"></i> Available</span>
+        <button *ngIf="selectedPatientId" class="btn-back" (click)="selectedPatientId = null; loadMedicalRecords()">
+          <i class="fas fa-arrow-left"></i> All Records
+        </button>
+      </div>
     </header>
 
     <div class="content-area">
       <div class="records-grid">
         <div class="record-card" *ngFor="let record of medicalRecords">
+          <div class="record-icon"><i class="fas fa-file-medical-alt"></i></div>
           <h3>{{ record.patientFullName }}</h3>
           <div class="record-details">
             <p><strong>Blood Type:</strong> {{ record.bloodDraw || 'N/A' }}</p>
@@ -33,8 +88,8 @@
             <p><strong>Status:</strong> <span class="status active">{{ record.status }}</span></p>
           </div>
           <div class="documents" *ngIf="record.documents && record.documents.length > 0">
-            <h4>Documents</h4>
-            <p *ngFor="let doc of record.documents"> {{ doc.titleDocument }}</p>
+            <h4><i class="fas fa-paperclip"></i> Documents</h4>
+            <p *ngFor="let doc of record.documents"><i class="fas fa-file-alt"></i> {{ doc.titleDocument }}</p>
           </div>
         </div>
       </div>

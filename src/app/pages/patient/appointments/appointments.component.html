@@ -1,18 +1,72 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 <div class="dashboard-container">
   <aside class="sidebar">
     <div class="sidebar-header"><h2>MedicalApp</h2></div>
     <nav class="sidebar-nav">
-      <a routerLink="/patient/dashboard">Dashboard</a>
-      <a routerLink="/patient/appointments" routerLinkActive="active">My Appointments</a>
-      <a routerLink="/patient/medical-records">Medical Records</a>
+      <a routerLink="/patient/dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a routerLink="/patient/appointments" routerLinkActive="active"><i class="fas fa-calendar-alt"></i> My Appointments</a>
+      <a routerLink="/patient/medical-records"><i class="fas fa-file-medical-alt"></i> Medical Records</a>
     </nav>
-    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+    <div class="sidebar-footer"><button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
   </aside>
 
   <main class="main-content">
     <header class="top-bar">
       <h1>My Appointments</h1>
-      <button class="btn-book" (click)="showBookForm = !showBookForm; loadDoctors()">+ Book Appointment</button>
+      <div class="top-bar-right">
+        <button class="btn-book" (click)="showBookForm = !showBookForm; loadDoctors()"><i class="fas fa-plus"></i> Book Appointment</button>
+        <div class="notification-wrapper">
+          <button class="notification-bell" (click)="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" *ngIf="appointments.length > 0">{{ appointments.length }}</span>
+          </button>
+          <div class="notification-dropdown" *ngIf="showNotifications">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <span class="notification-count">{{ appointments.length }} appointments</span>
+            </div>
+            <div class="notification-list">
+              <div class="notification-item" *ngIf="appointments.length > 0">
+                <div class="notification-icon" style="background: rgba(245, 158, 11, 0.12);">
+                  <i class="fas fa-calendar-check" style="color: #F59E0B;"></i>
+                </div>
+                <div class="notification-content">
+                  <p>{{ appointments.length }} appointments scheduled</p>
+                  <span>Total count</span>
+                </div>
+              </div>
+              <div class="notification-item empty" *ngIf="appointments.length === 0">
+                <p>No appointments</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-wrapper">
+          <button class="profile-trigger" (click)="toggleProfileMenu()">
+            <div class="profile-avatar"><i class="fas fa-user"></i></div>
+            <div class="profile-info">
+              <span class="profile-name">{{ patientName }}</span>
+              <span class="profile-role">Patient</span>
+            </div>
+            <i class="fas fa-chevron-down profile-arrow"></i>
+          </button>
+          <div class="profile-dropdown" *ngIf="showProfileMenu">
+            <div class="profile-header">
+              <div class="profile-avatar-large"><i class="fas fa-user"></i></div>
+              <div class="profile-details"><h4>{{ patientName }}</h4><p>{{ patientEmail }}</p></div>
+            </div>
+            <div class="profile-menu-items">
+              <a routerLink="/patient/dashboard" (click)="showProfileMenu = false"><i class="fas fa-user-circle"></i> My Profile</a>
+              <button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+          </div>
+        </div>
+
+        
+      </div>
     </header>
 
     <div class="content-area">
@@ -22,7 +76,7 @@
         <div class="form-group"><label>Date & Time</label><input type="datetime-local" [(ngModel)]="newAppointment.dateTimeAppointment" /></div>
         <div class="form-group"><label>Symptoms</label><input [(ngModel)]="newAppointment.symptoms" placeholder="Describe your symptoms" /></div>
         <div class="form-group"><label>Reason</label><input [(ngModel)]="newAppointment.reason" placeholder="Reason for visit" /></div>
-        <button class="btn-save" (click)="bookAppointment()">Confirm Booking</button>
+        <button class="btn-save" (click)="bookAppointment()"><i class="fas fa-check"></i> Confirm Booking</button>
       </div>
 
       <table class="appointment-table">

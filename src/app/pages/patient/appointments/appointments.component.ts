@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-patient-appointments',
   standalone: true,
-  imports: [CommonModule, RouterModule,FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './appointments.component.html',
   styleUrls: ['./appointments.component.scss']
 })
@@ -16,6 +16,10 @@ export class PatientAppointmentsComponent implements OnInit {
   appointments: any[] = [];
   showBookForm = false;
   doctors: any[] = [];
+  showNotifications = false;
+  showProfileMenu = false;
+  patientName = '';
+  patientEmail = '';
   private baseUrl = 'http://localhost:5039/api';
 
   newAppointment = {
@@ -38,6 +42,8 @@ export class PatientAppointmentsComponent implements OnInit {
 
   ngOnInit() {
     const user = this.authService.getUser();
+    this.patientName = `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Patient';
+    this.patientEmail = user.email || '';
     this.loadMyAppointments(user.id);
   }
 
@@ -90,6 +96,16 @@ export class PatientAppointmentsComponent implements OnInit {
         }
       }
     });
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) this.showProfileMenu = false;
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) this.showNotifications = false;
   }
 
   logout() {

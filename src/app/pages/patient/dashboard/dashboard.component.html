@@ -1,23 +1,106 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 <div class="dashboard-container">
   <aside class="sidebar">
     <div class="sidebar-header"><h2>MedicalApp</h2></div>
     <nav class="sidebar-nav">
-      <a routerLink="/patient/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-      <a routerLink="/patient/appointments" routerLinkActive="active">My Appointments</a>
-      <a routerLink="/patient/medical-records" routerLinkActive="active">Medical Records</a>
+      <a routerLink="/patient/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <i class="fas fa-chart-pie"></i> Dashboard
+      </a>
+      <a routerLink="/patient/appointments" routerLinkActive="active">
+        <i class="fas fa-calendar-alt"></i> My Appointments
+      </a>
+      <a routerLink="/patient/medical-records" routerLinkActive="active">
+        <i class="fas fa-file-medical-alt"></i> Medical Records
+      </a>
     </nav>
-    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+    <div class="sidebar-footer">
+      <button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
   </aside>
 
   <main class="main-content">
-    <header class="top-bar"><h1>Welcome, {{ username }}</h1></header>
+    <header class="top-bar">
+      <h1>Welcome, {{ username }}</h1>
+      <div class="top-bar-right">
+        <div class="notification-wrapper">
+          <button class="notification-bell" (click)="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" *ngIf="upcomingCount > 0">{{ upcomingCount }}</span>
+          </button>
+          <div class="notification-dropdown" *ngIf="showNotifications">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <span class="notification-count">{{ upcomingCount }} upcoming</span>
+            </div>
+            <div class="notification-list">
+              <div class="notification-item" *ngIf="myAppointments.length > 0">
+                <div class="notification-icon" style="background: rgba(245, 158, 11, 0.12);">
+                  <i class="fas fa-calendar-check" style="color: #F59E0B;"></i>
+                </div>
+                <div class="notification-content">
+                  <p>{{ upcomingCount }} upcoming appointments</p>
+                  <span>{{ myAppointments.length }} total</span>
+                </div>
+              </div>
+              <div class="notification-item empty" *ngIf="myAppointments.length === 0">
+                <p>No appointments scheduled</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-wrapper">
+          <button class="profile-trigger" (click)="toggleProfileMenu()">
+            <div class="profile-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+              <span class="profile-name">{{ patientName }}</span>
+              <span class="profile-role">Patient</span>
+            </div>
+            <i class="fas fa-chevron-down profile-arrow"></i>
+          </button>
+          <div class="profile-dropdown" *ngIf="showProfileMenu">
+            <div class="profile-header">
+              <div class="profile-avatar-large">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="profile-details">
+                <h4>{{ patientName }}</h4>
+                <p>{{ patientEmail }}</p>
+              </div>
+            </div>
+            <div class="profile-menu-items">
+              <a routerLink="/patient/dashboard" (click)="showProfileMenu = false">
+                <i class="fas fa-user-circle"></i> My Profile
+              </a>
+              <button (click)="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
     <div class="content-area">
       <div class="stats-grid">
-        <div class="stat-card"><h3>My Appointments</h3><p class="stat-number">{{ myAppointments.length }}</p></div>
-        <div class="stat-card"><h3>Upcoming</h3><p class="stat-number">3</p></div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--blue"><i class="fas fa-calendar-alt"></i></div>
+          <h3>My Appointments</h3>
+          <p class="stat-number">{{ myAppointments.length }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--blue"><i class="fas fa-calendar-check"></i></div>
+          <h3>Upcoming</h3>
+          <p class="stat-number">{{ upcomingCount }}</p>
+        </div>
       </div>
+
       <div class="today-appointments">
-        <h2>My Upcoming Appointments</h2>
+        <h2><i class="fas fa-calendar-alt"></i> My Upcoming Appointments</h2>
         <table>
           <thead><tr><th>Date</th><th>Time</th><th>Doctor</th><th>Reason</th></tr></thead>
           <tbody>

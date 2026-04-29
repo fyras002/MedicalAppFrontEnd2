@@ -13,7 +13,12 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class PatientDashboardComponent implements OnInit {
   username = '';
+  patientName = '';
+  patientEmail = '';
   myAppointments: any[] = [];
+  upcomingCount = 0;
+  showNotifications = false;
+  showProfileMenu = false;
   private baseUrl = 'http://localhost:5039/api';
 
   constructor(
@@ -25,6 +30,8 @@ export class PatientDashboardComponent implements OnInit {
   ngOnInit() {
     const user = this.authService.getUser();
     this.username = user.firstname || 'Patient';
+    this.patientName = `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Patient';
+    this.patientEmail = user.email || '';
     this.loadMyAppointments(user.id);
   }
 
@@ -36,12 +43,26 @@ export class PatientDashboardComponent implements OnInit {
           this.http.get<any[]>(`${this.baseUrl}/Appointments/patient/${me.idPatient}`).subscribe({
             next: (appointments) => {
               this.myAppointments = appointments;
+              const now = new Date();
+              this.upcomingCount = appointments.filter((a: any) => 
+                new Date(a.dateTimeAppointment) >= now
+              ).length;
               this.cdr.detectChanges();
             }
           });
         }
       }
     });
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) this.showProfileMenu = false;
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) this.showNotifications = false;
   }
 
   logout() {

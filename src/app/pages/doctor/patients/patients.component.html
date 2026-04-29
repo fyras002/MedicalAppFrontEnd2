@@ -1,33 +1,115 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 <div class="dashboard-container">
   <aside class="sidebar">
     <div class="sidebar-header">
       <h2>MedicalApp</h2>
     </div>
     <nav class="sidebar-nav">
-      <a routerLink="/doctor/dashboard">Dashboard</a>
-      <a routerLink="/doctor/appointments">My Appointments</a>
-      <a routerLink="/doctor/patients" routerLinkActive="active">My Patients</a>
-      <a routerLink="/doctor/consultations">Consultations</a>
-      <a routerLink="/doctor/medical-records">Medical Records</a>
+      <a routerLink="/doctor/dashboard">
+        <i class="fas fa-chart-pie"></i> Dashboard
+      </a>
+      <a routerLink="/doctor/appointments">
+        <i class="fas fa-calendar-alt"></i> My Appointments
+      </a>
+      <a routerLink="/doctor/patients" routerLinkActive="active">
+        <i class="fas fa-heart"></i> My Patients
+      </a>
+      <a routerLink="/doctor/consultations">
+        <i class="fas fa-notes-medical"></i> Consultations
+      </a>
+      <a routerLink="/doctor/medical-records">
+        <i class="fas fa-file-medical-alt"></i> Medical Records
+      </a>
     </nav>
     <div class="sidebar-footer">
-      <button (click)="logout()">Logout</button>
+      <button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
   </aside>
 
   <main class="main-content">
     <header class="top-bar">
       <h1>My Patients</h1>
+      <div class="top-bar-right">
+        <div class="notification-wrapper">
+          <button class="notification-bell" (click)="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" *ngIf="patients.length > 0">{{ patients.length }}</span>
+          </button>
+          <div class="notification-dropdown" *ngIf="showNotifications">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <span class="notification-count">{{ patients.length }} patients</span>
+            </div>
+            <div class="notification-list">
+              <div class="notification-item" *ngIf="patients.length > 0">
+                <div class="notification-icon" style="background: rgba(16, 185, 129, 0.12);">
+                  <i class="fas fa-heart" style="color: #10B981;"></i>
+                </div>
+                <div class="notification-content">
+                  <p>{{ patients.length }} patients under your care</p>
+                  <span>Total count</span>
+                </div>
+              </div>
+              <div class="notification-item empty" *ngIf="patients.length === 0">
+                <p>No patients</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-wrapper">
+          <button class="profile-trigger" (click)="toggleProfileMenu()">
+            <div class="profile-avatar">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <div class="profile-info">
+              <span class="profile-name">{{ doctorName }}</span>
+              <span class="profile-role">{{ speciality }}</span>
+            </div>
+            <i class="fas fa-chevron-down profile-arrow"></i>
+          </button>
+          <div class="profile-dropdown" *ngIf="showProfileMenu">
+            <div class="profile-header">
+              <div class="profile-avatar-large">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <div class="profile-details">
+                <h4>{{ doctorName }}</h4>
+                <p>{{ doctorEmail }}</p>
+              </div>
+            </div>
+            <div class="profile-menu-items">
+              <a routerLink="/doctor/dashboard" (click)="showProfileMenu = false">
+                <i class="fas fa-user-circle"></i> My Profile
+              </a>
+              <button (click)="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <span class="availability-badge">
+          <i class="fas fa-circle"></i> Available
+        </span>
+      </div>
     </header>
 
     <div class="content-area">
       <div class="patients-grid">
         <div class="patient-card" *ngFor="let patient of patients">
+          <div class="patient-icon">
+            <i class="fas fa-user"></i>
+          </div>
           <h3>{{ patient.firstname }} {{ patient.lastname }}</h3>
-          <p>{{ patient.phone || 'N/A' }}</p>
-          <p>{{ patient.email || 'N/A' }}</p>
-          <p>{{ patient.birthdate | date:'mediumDate' }}</p>
-          <button class="btn-view" (click)="viewMedicalRecord(patient)">View Medical Record</button>
+          <p><i class="fas fa-phone"></i> {{ patient.phone || 'N/A' }}</p>
+          <p><i class="fas fa-envelope"></i> {{ patient.email || 'N/A' }}</p>
+          <p><i class="fas fa-birthday-cake"></i> {{ patient.birthdate | date:'mediumDate' }}</p>
+          <button class="btn-view" (click)="viewMedicalRecord(patient)">
+            <i class="fas fa-file-medical-alt"></i> View Medical Record
+          </button>
         </div>
       </div>
       <p *ngIf="patients.length === 0" class="no-data">No patients found</p>

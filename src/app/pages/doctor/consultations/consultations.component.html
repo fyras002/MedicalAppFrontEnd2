@@ -1,20 +1,75 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 <div class="dashboard-container">
   <aside class="sidebar">
     <div class="sidebar-header"><h2>MedicalApp</h2></div>
     <nav class="sidebar-nav">
-      <a routerLink="/doctor/dashboard">Dashboard</a>
-      <a routerLink="/doctor/appointments">My Appointments</a>
-      <a routerLink="/doctor/patients">My Patients</a>
-      <a routerLink="/doctor/consultations" routerLinkActive="active">Consultations</a>
-      <a routerLink="/doctor/medical-records">Medical Records</a>
+      <a routerLink="/doctor/dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a routerLink="/doctor/appointments"><i class="fas fa-calendar-alt"></i> My Appointments</a>
+      <a routerLink="/doctor/patients"><i class="fas fa-heart"></i> My Patients</a>
+      <a routerLink="/doctor/consultations" routerLinkActive="active"><i class="fas fa-notes-medical"></i> Consultations</a>
+      <a routerLink="/doctor/medical-records"><i class="fas fa-file-medical-alt"></i> Medical Records</a>
     </nav>
-    <div class="sidebar-footer"><button (click)="logout()">Logout</button></div>
+    <div class="sidebar-footer"><button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
   </aside>
 
   <main class="main-content">
     <header class="top-bar">
       <h1>Consultations</h1>
-      <button class="btn-add" (click)="showForm = !showForm">+ New Consultation</button>
+      <div class="top-bar-right">
+        <button class="btn-add" (click)="showForm = !showForm"><i class="fas fa-plus"></i> New Consultation</button>
+        <div class="notification-wrapper">
+          <button class="notification-bell" (click)="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" *ngIf="consultations.length > 0">{{ consultations.length }}</span>
+          </button>
+          <div class="notification-dropdown" *ngIf="showNotifications">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <span class="notification-count">{{ consultations.length }} consultations</span>
+            </div>
+            <div class="notification-list">
+              <div class="notification-item" *ngIf="consultations.length > 0">
+                <div class="notification-icon" style="background: rgba(139, 92, 246, 0.12);">
+                  <i class="fas fa-notes-medical" style="color: #8B5CF6;"></i>
+                </div>
+                <div class="notification-content">
+                  <p>{{ consultations.length }} consultations recorded</p>
+                  <span>Total count</span>
+                </div>
+              </div>
+              <div class="notification-item empty" *ngIf="consultations.length === 0">
+                <p>No consultations</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-wrapper">
+          <button class="profile-trigger" (click)="toggleProfileMenu()">
+            <div class="profile-avatar"><i class="fas fa-user-md"></i></div>
+            <div class="profile-info">
+              <span class="profile-name">{{ doctorName }}</span>
+              <span class="profile-role">{{ speciality }}</span>
+            </div>
+            <i class="fas fa-chevron-down profile-arrow"></i>
+          </button>
+          <div class="profile-dropdown" *ngIf="showProfileMenu">
+            <div class="profile-header">
+              <div class="profile-avatar-large"><i class="fas fa-user-md"></i></div>
+              <div class="profile-details"><h4>{{ doctorName }}</h4><p>{{ doctorEmail }}</p></div>
+            </div>
+            <div class="profile-menu-items">
+              <a routerLink="/doctor/dashboard" (click)="showProfileMenu = false"><i class="fas fa-user-circle"></i> My Profile</a>
+              <button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+          </div>
+        </div>
+
+        <span class="availability-badge"><i class="fas fa-circle"></i> Available</span>
+        
+      </div>
     </header>
 
     <div class="content-area">
@@ -27,35 +82,15 @@
             <option *ngFor="let p of patients" [value]="p.idPatient">{{ p.firstname }} {{ p.lastname }}</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Symptoms</label>
-          <input [(ngModel)]="newConsultation.symptomsList" placeholder="e.g. Fever, headache" />
-        </div>
-        <div class="form-group">
-          <label>Tests</label>
-          <input [(ngModel)]="newConsultation.tests" placeholder="e.g. Blood pressure" />
-        </div>
-        <div class="form-group">
-          <label>Medications</label>
-          <input [(ngModel)]="newConsultation.medicationsList" placeholder="e.g. Paracetamol" />
-        </div>
-        <div class="form-group">
-          <label>Notes</label>
-          <textarea [(ngModel)]="newConsultation.notes" placeholder="Doctor's notes..."></textarea>
-        </div>
-        <button class="btn-save" (click)="createConsultation()">Save Consultation</button>
+        <div class="form-group"><label>Symptoms</label><input [(ngModel)]="newConsultation.symptomsList" placeholder="e.g. Fever, headache" /></div>
+        <div class="form-group"><label>Tests</label><input [(ngModel)]="newConsultation.tests" placeholder="e.g. Blood pressure" /></div>
+        <div class="form-group"><label>Medications</label><input [(ngModel)]="newConsultation.medicationsList" placeholder="e.g. Paracetamol" /></div>
+        <div class="form-group"><label>Notes</label><textarea [(ngModel)]="newConsultation.notes" placeholder="Doctor's notes..."></textarea></div>
+        <button class="btn-save" (click)="createConsultation()"><i class="fas fa-save"></i> Save Consultation</button>
       </div>
 
       <table class="consultation-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Patient</th>
-            <th>Symptoms</th>
-            <th>Medications</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Date</th><th>Patient</th><th>Symptoms</th><th>Medications</th><th>Notes</th></tr></thead>
         <tbody>
           <tr *ngFor="let c of consultations">
             <td>{{ c.myDateTime | date:'mediumDate' }}</td>
@@ -64,9 +99,7 @@
             <td>{{ c.medicationsList }}</td>
             <td>{{ c.notes }}</td>
           </tr>
-          <tr *ngIf="consultations.length === 0">
-            <td colspan="5" class="no-data">No consultations yet</td>
-          </tr>
+          <tr *ngIf="consultations.length === 0"><td colspan="5" class="no-data">No consultations yet</td></tr>
         </tbody>
       </table>
     </div>

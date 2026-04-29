@@ -1,73 +1,53 @@
-// ============================================================
-// CarePlus – Doctor Consultations SCSS
-// Brand: #007BFF blue · white/light-gray backgrounds · clean medical feel
-// ============================================================
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap');
 
-// --------------- Variables ---------------
 $brand:          #007BFF;
 $brand-dark:     #0056CC;
 $brand-light:    #E8F4FF;
-$sidebar-bg:     #0A1F44;
-$sidebar-hover:  rgba(255, 255, 255, 0.10);
-$sidebar-active: rgba(0, 123, 255, 0.35);
-$white:          #FFFFFF;
-$bg-page:        #F4F7FB;
-$text-primary:   #1A2B4A;
-$text-secondary: #6B7A99;
-$text-muted:     #A0ABBE;
-$border-color:   #E8ECF4;
-$shadow-sm:      0 2px 8px  rgba(0, 0, 0, 0.06);
-$shadow-md:      0 4px 20px rgba(0, 0, 0, 0.09);
-$shadow-card:    0 2px 16px rgba(0, 123, 255, 0.08);
-$radius-sm:      8px;
-$radius-md:      12px;
-$radius-lg:      16px;
-$sidebar-w:      260px;
-$transition:     0.22s ease;
-$danger:         #DC3545;
-$danger-light:   #FFE5E8;
-$success:        #28A745;
-$success-light:  #E6F9EE;
-$input-bg:       #FAFBFC;
 
-// --------------- Mixins ---------------
+$sidebar-bg:            #0F1E3C;
+$sidebar-hover:         rgba(255, 255, 255, 0.08);
+$sidebar-active-bg:     rgba(59, 130, 246, 0.20);
+$sidebar-active-border: #3B82F6;
+$sidebar-text:          rgba(255, 255, 255, 0.68);
+$sidebar-text-active:   #FFFFFF;
+
+$white:          #FFFFFF;
+$bg-page:        #F3F6FB;
+$text-primary:   #12213D;
+$text-secondary: #64748B;
+$text-muted:     #94A3B8;
+$border-color:   #E2E8F4;
+
+$shadow-xs:         0 1px 4px  rgba(15, 30, 60, 0.06);
+$shadow-sm:         0 2px 10px rgba(15, 30, 60, 0.08);
+$shadow-md:         0 6px 24px rgba(15, 30, 60, 0.12);
+$shadow-card:       0 2px 14px rgba(59, 130, 246, 0.07);
+$shadow-card-hover: 0 8px 28px rgba(59, 130, 246, 0.13);
+
+$radius-sm:   8px;
+$radius-md:   14px;
+$sidebar-w:   256px;
+$topbar-h:    68px;
+$transition:  0.22s cubic-bezier(0.4, 0, 0.2, 1);
+
+$success:      #28A745;
+$success-dark: #218838;
+
 @mixin flex($align: center, $justify: flex-start, $gap: 0) {
-  display: flex;
-  align-items: $align;
-  justify-content: $justify;
+  display: flex; align-items: $align; justify-content: $justify;
   @if $gap != 0 { gap: $gap; }
 }
 
 @mixin card {
-  background: $white;
-  border-radius: $radius-md;
-  box-shadow: $shadow-card;
-  border: 1px solid $border-color;
+  background: $white; border-radius: $radius-md; box-shadow: $shadow-card; border: 1px solid $border-color;
 }
 
 @mixin input-reset {
-  width: 100%;
-  padding: 11px 14px;
-  border: 1px solid $border-color;
-  border-radius: $radius-sm;
-  background: $input-bg;
-  font-size: 14px;
-  color: $text-primary;
-  box-sizing: border-box;
-  transition: border-color $transition, box-shadow $transition, background $transition;
-  font-family: inherit;
-
-  &:focus {
-    outline: none;
-    border-color: $brand;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
-    background: $white;
-  }
-
-  &::placeholder {
-    color: $text-muted;
-    opacity: 1;
-  }
+  width: 100%; padding: 11px 14px; border: 1px solid $border-color; border-radius: $radius-sm;
+  background: $white; font-size: 14px; color: $text-primary; box-sizing: border-box;
+  transition: border-color $transition, box-shadow $transition; font-family: 'DM Sans', sans-serif;
+  &:focus { outline: none; border-color: $brand; box-shadow: 0 0 0 3px rgba(0,123,255,0.12); }
+  &::placeholder { color: $text-muted; opacity: 1; }
 }
 
 @mixin responsive($bp) {
@@ -76,448 +56,105 @@ $input-bg:       #FAFBFC;
   @if $bp == small   { @media (max-width: 480px)  { @content; } }
 }
 
-// ============================================================
-// Layout shell
-// ============================================================
+*, *::before, *::after { box-sizing: border-box; }
+
 .dashboard-container {
-  display: flex;
-  min-height: 100vh;
-  background: $bg-page;
-  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-  color: $text-primary;
+  display: flex; min-height: 100vh; background: $bg-page;
+  font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif; color: $text-primary;
 }
 
-// ============================================================
-// Sidebar
-// ============================================================
 .sidebar {
-  width: $sidebar-w;
-  background: $sidebar-bg;
-  color: $white;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  z-index: 100;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
-  transition: transform $transition;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(180deg, $brand 0%, transparent 100%);
-    opacity: 0.7;
+  width: $sidebar-w; background: $sidebar-bg; color: $white;
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; height: 100vh; z-index: 200;
+  transition: transform $transition, box-shadow $transition;
+  &::after { content: ''; position: absolute; top: 0; right: 0; width: 2px; height: 100%; background: linear-gradient(180deg, $brand 0%, rgba($brand, 0.1) 70%, transparent 100%); opacity: 0.8; }
+  .sidebar-header { padding: 24px 22px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); @include flex(center, flex-start, 10px);
+    h2 { margin: 0; font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.4px; color: $white; &::before { content: '✚ '; color: $brand; font-size: 16px; } }
   }
-
-  .sidebar-header {
-    padding: 28px 24px 22px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
-    h2 {
-      margin: 0;
-      font-size: 19px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      color: $white;
+  .sidebar-nav { flex: 1; padding: 18px 0 12px; overflow-y: auto;
+    &::-webkit-scrollbar { width: 3px; } &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+    a { display: flex; align-items: center; gap: 10px; color: $sidebar-text; text-decoration: none; padding: 11px 18px 11px 20px; margin: 2px 10px; border-radius: $radius-sm; font-size: 14px; font-weight: 500; transition: background $transition, color $transition, padding-left $transition; position: relative;
+      &:hover { background: $sidebar-hover; color: $white; padding-left: 24px; }
+      &.active { background: $sidebar-active-bg; color: $sidebar-text-active; font-weight: 600; padding-left: 24px; &::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px; background: $sidebar-active-border; border-radius: 0 3px 3px 0; } }
     }
   }
-
-  .sidebar-nav {
-    flex: 1;
-    padding: 16px 0;
-    overflow-y: auto;
-
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 4px;
-    }
-
-    a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: rgba(255, 255, 255, 0.72);
-      text-decoration: none;
-      padding: 11px 20px;
-      margin: 2px 12px;
-      border-radius: $radius-sm;
-      font-size: 14px;
-      font-weight: 500;
-      transition: background $transition, color $transition, padding-left $transition;
-
-      &:hover {
-        background: $sidebar-hover;
-        color: $white;
-        padding-left: 24px;
-      }
-
-      &.active {
-        background: $sidebar-active;
-        color: $white;
-        font-weight: 600;
-        box-shadow: inset 3px 0 0 $brand;
-        padding-left: 24px;
-      }
+  .sidebar-footer { padding: 16px 18px; border-top: 1px solid rgba(255,255,255,0.07);
+    button { width: 100%; padding: 11px 16px; background: transparent; color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.12); border-radius: $radius-sm; cursor: pointer; font-size: 13.5px; font-weight: 500; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1px; @include flex(center, center, 8px); transition: background $transition, color $transition, border-color $transition;
+      &:hover { background: rgba(244,63,94,0.15); color: #FB7185; border-color: rgba(244,63,94,0.30); } &:active { transform: scale(0.98); }
     }
   }
-
-  .sidebar-footer {
-    padding: 18px 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-
-    button {
-      width: 100%;
-      padding: 11px 16px;
-      background: rgba(255, 255, 255, 0.07);
-      color: rgba(255, 255, 255, 0.80);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: $radius-sm;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: background $transition, color $transition, border-color $transition;
-
-      &:hover {
-        background: rgba(220, 53, 69, 0.22);
-        color: #FF6B7A;
-        border-color: rgba(220, 53, 69, 0.35);
-      }
-    }
-  }
-
-  @include responsive(mobile) {
-    transform: translateX(-100%);
-    width: 240px;
-
-    &.open {
-      transform: translateX(0);
-    }
-  }
+  @include responsive(mobile) { transform: translateX(-100%); width: 240px; box-shadow: none; &.open { transform: translateX(0); box-shadow: 8px 0 40px rgba(0,0,0,0.28); } }
 }
 
-// ============================================================
-// Main content
-// ============================================================
-.main-content {
-  flex: 1;
-  margin-left: $sidebar-w;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+@include responsive(mobile) { .sidebar.open ~ .main-content::before { content: ''; position: fixed; inset: 0; background: rgba(10,20,40,0.45); z-index: 150; animation: fadeIn 0.2s ease; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-  @include responsive(mobile) {
-    margin-left: 0;
-  }
-}
+.main-content { flex: 1; margin-left: $sidebar-w; display: flex; flex-direction: column; min-height: 100vh; @include responsive(mobile) { margin-left: 0; } }
 
-// ============================================================
-// Top bar
-// ============================================================
 .top-bar {
-  background: $white;
-  padding: 18px 32px;
-  @include flex(center, space-between);
-  box-shadow: $shadow-sm;
-  border-bottom: 1px solid $border-color;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  flex-wrap: wrap;
-  gap: 12px;
-
-  h1 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 700;
-    color: $text-primary;
-    letter-spacing: -0.3px;
-  }
-
-  .btn-add {
-    @include flex(center, center, 6px);
-    padding: 10px 20px;
-    background: $brand;
-    color: $white;
-    border: none;
-    border-radius: $radius-sm;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    font-family: inherit;
-    white-space: nowrap;
-    transition: background $transition, transform $transition, box-shadow $transition;
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.25);
-
-    &:hover {
-      background: $brand-dark;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 14px rgba(0, 123, 255, 0.35);
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-  }
-
-  @include responsive(mobile) {
-    padding: 16px 20px;
-    flex-direction: column;
-    align-items: flex-start;
-
-    h1 {
-      font-size: 18px;
-    }
-
-    .btn-add {
-      width: 100%;
-      justify-content: center;
-    }
-  }
+  background: $white; padding: 0 32px; height: $topbar-h;
+  @include flex(center, space-between); box-shadow: $shadow-xs; border-bottom: 1px solid $border-color;
+  position: sticky; top: 0; z-index: 100;
+  h1 { margin: 0; font-family: 'Nunito', sans-serif; font-size: 19px; font-weight: 800; color: $text-primary; letter-spacing: -0.4px; }
+  @include responsive(mobile) { padding: 0 18px; height: auto; min-height: 58px; flex-wrap: wrap; gap: 12px; h1 { font-size: 16px; } .top-bar-right { width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 8px; } }
 }
 
-// ============================================================
-// Content area
-// ============================================================
-.content-area {
-  padding: 32px;
-  flex: 1;
+.top-bar-right { display: flex; align-items: center; gap: 14px; }
 
-  @include responsive(tablet) {
-    padding: 24px;
-  }
-  @include responsive(mobile) {
-    padding: 16px;
-  }
+.availability-badge { @include flex(center, center, 6px); padding: 8px 16px; border-radius: 20px; background: rgba(40,167,69,0.10); color: #28A745; font-size: 13px; font-weight: 600; white-space: nowrap; i { font-size: 8px; animation: pulse 2s infinite; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.btn-add { @include flex(center, center, 6px); padding: 10px 20px; background: $brand; color: $white; border: none; border-radius: $radius-sm; cursor: pointer; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: background $transition, transform $transition, box-shadow $transition; box-shadow: 0 2px 8px rgba(0,123,255,0.25); &:hover { background: $brand-dark; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,123,255,0.35); } &:active { transform: translateY(0); } }
+
+.notification-wrapper { position: relative; }
+.notification-bell { position: relative; width: 38px; height: 38px; border-radius: 10px; border: 1px solid $border-color; background: $white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background $transition; i { font-size: 16px; color: $text-secondary; } &:hover { background: #F8FAFC; i { color: $text-primary; } } }
+.notification-badge { position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; border-radius: 50%; background: #EF4444; color: white; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid $white; }
+.notification-dropdown { position: absolute; top: 48px; right: 0; width: 300px; background: $white; border-radius: $radius-md; box-shadow: $shadow-md; border: 1px solid $border-color; z-index: 300; overflow: hidden; }
+.notification-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid $border-color; h3 { margin: 0; font-size: 15px; font-weight: 700; color: $text-primary; } }
+.notification-count { font-size: 11px; font-weight: 600; color: $brand; background: $brand-light; padding: 4px 10px; border-radius: 12px; }
+.notification-list { max-height: 200px; overflow-y: auto; }
+.notification-item { display: flex; gap: 12px; padding: 14px 20px; border-bottom: 1px solid #F1F5F9; &:last-child { border-bottom: none; } &.empty { justify-content: center; padding: 30px; p { color: $text-muted; font-size: 13px; margin: 0; } } }
+.notification-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; i { font-size: 15px; } }
+.notification-content { flex: 1; p { margin: 0 0 4px; font-size: 13px; font-weight: 500; color: $text-primary; line-height: 1.4; } span { font-size: 11px; color: $text-muted; font-weight: 500; } }
+
+.profile-wrapper { position: relative; }
+.profile-trigger { display: flex; align-items: center; gap: 10px; padding: 5px 10px; border-radius: 10px; border: 1px solid transparent; background: transparent; cursor: pointer; transition: background $transition, border-color $transition; &:hover { background: #F8FAFC; border-color: $border-color; } }
+.profile-avatar { width: 34px; height: 34px; border-radius: 10px; background: rgba(59,130,246,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; i { font-size: 16px; color: $brand; } }
+.profile-info { text-align: left; .profile-name { display: block; font-size: 13px; font-weight: 600; color: $text-primary; line-height: 1.2; } .profile-role { display: block; font-size: 11px; font-weight: 500; color: $text-muted; } }
+.profile-arrow { font-size: 10px; color: $text-muted; }
+.profile-dropdown { position: absolute; top: 52px; right: 0; width: 280px; background: $white; border-radius: $radius-md; box-shadow: $shadow-md; border: 1px solid $border-color; z-index: 300; overflow: hidden; }
+.profile-header { display: flex; align-items: center; gap: 14px; padding: 20px; background: #F8FAFC; border-bottom: 1px solid $border-color; }
+.profile-avatar-large { width: 48px; height: 48px; border-radius: 12px; background: rgba(59,130,246,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; i { font-size: 22px; color: $brand; } }
+.profile-details { h4 { margin: 0 0 2px; font-size: 14px; font-weight: 700; color: $text-primary; } p { margin: 0; font-size: 12px; color: $text-muted; } }
+.profile-menu-items { padding: 8px;
+  a, button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: none; border-radius: 8px; background: transparent; cursor: pointer; font-size: 13px; font-weight: 500; color: $text-primary; text-decoration: none; transition: background 0.15s; font-family: 'DM Sans', sans-serif; i { width: 20px; text-align: center; font-size: 14px; color: $text-muted; } &:hover { background: #F1F5F9; } }
+  button { color: #EF4444; i { color: #EF4444; } }
 }
 
-// ============================================================
-// Form card
-// ============================================================
+.content-area { padding: 30px 32px 40px; flex: 1; @include responsive(tablet) { padding: 24px; } @include responsive(mobile) { padding: 16px 14px 32px; } }
+
 .form-card {
-  @include card;
-  padding: 28px 32px;
-  margin-bottom: 28px;
-  animation: slideDown 0.28s ease;
-
-  h3 {
-    margin: 0 0 24px;
-    font-size: 17px;
-    font-weight: 700;
-    color: $text-primary;
-    padding-bottom: 16px;
-    border-bottom: 1px solid $border-color;
+  @include card; padding: 28px 32px; margin-bottom: 28px; animation: slideDown 0.28s ease;
+  h3 { margin: 0 0 24px; font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 800; color: $text-primary; letter-spacing: -0.3px; padding-bottom: 16px; border-bottom: 1px solid $border-color; }
+  .form-group { margin-bottom: 18px;
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: $text-secondary; text-transform: uppercase; letter-spacing: 0.4px; }
+    input, select { @include input-reset; }
+    select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+    textarea { @include input-reset; height: 90px; resize: vertical; min-height: 90px; }
   }
-
-  .form-group {
-    margin-bottom: 18px;
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      font-size: 13px;
-      color: $text-secondary;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-
-    input,
-    select {
-      @include input-reset;
-    }
-
-    select {
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7A99' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
-    }
-
-    textarea {
-      @include input-reset;
-      height: 90px;
-      resize: vertical;
-      min-height: 90px;
-    }
-  }
-
-  .btn-save {
-    @include flex(center, center, 6px);
-    padding: 12px 28px;
-    background: $success;
-    color: $white;
-    border: none;
-    border-radius: $radius-sm;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    font-family: inherit;
-    margin-top: 8px;
-    transition: background $transition, transform $transition, box-shadow $transition;
-    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.25);
-
-    &::before {
-      content: '💾';
-      font-size: 15px;
-    }
-
-    &:hover {
-      background: darken($success, 8%);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 14px rgba(40, 167, 69, 0.35);
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-  }
-
-  @include responsive(mobile) {
-    padding: 20px;
-    margin-bottom: 20px;
-
-    h3 {
-      font-size: 16px;
-    }
-
-    .btn-save {
-      width: 100%;
-      justify-content: center;
-    }
-  }
+  .btn-save { @include flex(center, center, 6px); width: 100%; padding: 12px; background: $success; color: $white; border: none; border-radius: $radius-sm; cursor: pointer; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; margin-top: 8px; transition: background $transition, transform $transition, box-shadow $transition; box-shadow: 0 2px 8px rgba(40,167,69,0.25); &:hover { background: $success-dark; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(40,167,69,0.35); } &:active { transform: translateY(0); } }
+  @include responsive(mobile) { padding: 20px; margin-bottom: 20px; h3 { font-size: 16px; } }
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-// ============================================================
-// Consultation table
-// ============================================================
 .consultation-table {
-  @include card;
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  overflow: hidden;
-
-  thead {
-    tr {
-      background: $bg-page;
-    }
-  }
-
-  th {
-    text-align: left;
-    padding: 14px 20px;
-    color: $text-secondary;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    border-bottom: 2px solid $border-color;
-    white-space: nowrap;
-
-    &:first-child {
-      border-radius: $radius-md 0 0 0;
-    }
-    &:last-child {
-      border-radius: 0 $radius-md 0 0;
-    }
-  }
-
-  tbody {
-    tr {
-      transition: background $transition;
-
-      &:hover {
-        background: $brand-light;
-      }
-
-      &:last-child {
-        td {
-          border-bottom: none;
-        }
-      }
-    }
-  }
-
-  td {
-    padding: 14px 20px;
-    border-bottom: 1px solid $border-color;
-    font-size: 14px;
-    color: $text-primary;
-    vertical-align: middle;
-
-    // Date column emphasis
-    &:first-child {
-      font-weight: 600;
-      color: $brand;
-      white-space: nowrap;
-    }
-
-    // Symptoms & Medications – allow wrapping for readability
-    &:nth-child(3),
-    &:nth-child(4) {
-      max-width: 200px;
-      white-space: normal;
-      word-break: break-word;
-    }
-
-    // Notes column
-    &:last-child {
-      max-width: 220px;
-      white-space: normal;
-      word-break: break-word;
-      color: $text-secondary;
-      font-style: italic;
-    }
-  }
-
-  .no-data {
-    text-align: center;
-    color: $text-muted;
-    padding: 48px 20px;
-    font-size: 14px;
-    font-style: italic;
-    white-space: normal;
-
-    &::before {
-      content: '📋';
-      display: block;
-      font-size: 28px;
-      margin-bottom: 12px;
-      font-style: normal;
-    }
-  }
-
-  @include responsive(mobile) {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-
-    th,
-    td {
-      padding: 12px 16px;
-      font-size: 13px;
-    }
-  }
+  @include card; width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden;
+  thead tr { background: $bg-page; }
+  th { text-align: left; padding: 14px 20px; color: $text-secondary; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid $border-color; white-space: nowrap; &:first-child { border-radius: $radius-md 0 0 0; } &:last-child { border-radius: 0 $radius-md 0 0; } }
+  tbody tr { transition: background $transition; &:hover { background: $brand-light; } &:last-child td { border-bottom: none; } }
+  td { padding: 14px 20px; border-bottom: 1px solid $border-color; font-size: 14px; color: $text-primary; vertical-align: middle; &:first-child { font-weight: 600; color: $brand; white-space: nowrap; } }
+  .no-data { text-align: center; color: $text-muted; padding: 48px 20px; font-size: 14px; white-space: normal; }
+  @include responsive(mobile) { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; th, td { padding: 12px 16px; font-size: 13px; } }
 }

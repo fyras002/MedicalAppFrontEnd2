@@ -16,6 +16,11 @@ export class DoctorConsultationsComponent implements OnInit {
   consultations: any[] = [];
   patients: any[] = [];
   showForm = false;
+  showNotifications = false;
+  showProfileMenu = false;
+  doctorName = '';
+  doctorEmail = '';
+  speciality = '';
 
   newConsultation = {
     idPatient: null,
@@ -32,15 +37,18 @@ export class DoctorConsultationsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadData();
+    const user = this.authService.getUser();
+    this.doctorName = `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Doctor';
+    this.doctorEmail = user.email || '';
+    this.loadData(user.id);
   }
 
-  loadData() {
-    const user = this.authService.getUser();
-    this.doctorService.getDoctorByUserId(user.id).subscribe({
+  loadData(userId: number) {
+    this.doctorService.getDoctorByUserId(userId).subscribe({
       next: (doctors) => {
         const doctor = doctors[0];
         if (doctor) {
+          this.speciality = doctor.specialityName;
           this.doctorService.getDoctorConsultations(doctor.id).subscribe({
             next: (consultations) => {
               this.consultations = consultations;
@@ -71,13 +79,23 @@ export class DoctorConsultationsComponent implements OnInit {
           }).subscribe({
             next: () => {
               this.showForm = false;
-              this.loadData();
+              this.loadData(user.id);
               this.cdr.detectChanges();
             }
           });
         }
       }
     });
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) this.showProfileMenu = false;
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) this.showNotifications = false;
   }
 
   logout() {

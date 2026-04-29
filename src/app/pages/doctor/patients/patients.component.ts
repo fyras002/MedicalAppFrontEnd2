@@ -13,6 +13,11 @@ import { DoctorService } from '../../../services/doctor.service';
 })
 export class DoctorPatientsComponent implements OnInit {
   patients: any[] = [];
+  showNotifications = false;
+  showProfileMenu = false;
+  doctorName = '';
+  doctorEmail = '';
+  speciality = '';
 
   constructor(
     private authService: AuthService,
@@ -22,7 +27,22 @@ export class DoctorPatientsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const user = this.authService.getUser();
+    this.doctorName = `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Doctor';
+    this.doctorEmail = user.email || '';
+    this.loadDoctorInfo(user.id);
     this.loadPatients();
+  }
+
+  loadDoctorInfo(userId: number) {
+    this.doctorService.getDoctorByUserId(userId).subscribe({
+      next: (doctors) => {
+        const doctor = doctors[0];
+        if (doctor) {
+          this.speciality = doctor.specialityName;
+        }
+      }
+    });
   }
 
   loadPatients() {
@@ -36,6 +56,16 @@ export class DoctorPatientsComponent implements OnInit {
 
   viewMedicalRecord(patient: any) {
     this.router.navigate(['/doctor/medical-records', patient.idPatient]);
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) this.showProfileMenu = false;
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu = !this.showProfileMenu;
+    if (this.showProfileMenu) this.showNotifications = false;
   }
 
   logout() {
