@@ -1,30 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-$brand:          #007BFF;
-$brand-dark:     #0056CC;
-$sidebar-bg:     #0F1E3C;
+$brand:          #4F6BFF;
+$brand-dark:     #3A52E0;
+$brand-light:    #EEF1FF;
 $white:          #FFFFFF;
-$text-primary:   #12213D;
-$text-secondary: #64748B;
-$text-muted:     #94A3B8;
-$border-color:   #E2E8F4;
-$shadow-card:    0 8px 32px rgba(15, 30, 60, 0.12);
-$radius-sm:      8px;
+$bg-page:        #F7F8FC;
+$text-primary:   #111827;
+$text-secondary: #6B7280;
+$text-muted:     #9CA3AF;
+$border-color:   #E5E7EB;
+$shadow-card:    0 8px 30px rgba(0, 0, 0, 0.10);
+$radius-sm:      10px;
 $radius-md:      14px;
 $radius-lg:      20px;
-$transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
+$transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
 
 @mixin flex($align: center, $justify: center, $gap: 0) {
-  display: flex; align-items: $align; justify-content: $justify;
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
   @if $gap != 0 { gap: $gap; }
 }
 
 .login-container {
   @include flex;
   min-height: 100vh;
-  background: linear-gradient(160deg, #E8F4FF 0%, #D6EAFF 30%, #E8F4FF 60%, #C8E2FF 100%);
+  background: $bg-page;
   padding: 24px;
-  font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   position: relative;
   overflow: hidden;
 
@@ -33,7 +36,7 @@ $transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
     position: absolute;
     top: -180px; right: -120px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(0, 123, 255, 0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(79, 107, 255, 0.06) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
   }
@@ -43,7 +46,7 @@ $transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
     position: absolute;
     bottom: -150px; left: -100px;
     width: 450px; height: 450px;
-    background: radial-gradient(circle, rgba(0, 123, 255, 0.04) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(79, 107, 255, 0.04) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
   }
@@ -58,7 +61,7 @@ $transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: $shadow-card, 0 0 0 1px rgba(255, 255, 255, 0.1);
   position: relative;
   z-index: 1;
-  animation: cardFadeIn 0.45s ease;
+  border: 1px solid $border-color;
 
   .logo {
     text-align: center;
@@ -66,23 +69,17 @@ $transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
     h1 {
       margin: 0;
-      font-family: 'Nunito', sans-serif;
-      font-size: 30px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
       font-weight: 800;
-      color: #0F1E3C;
+      color: $text-primary;
       letter-spacing: -0.5px;
-
-      &::before {
-        content: '✚ ';
-        color: $brand;
-        font-size: 24px;
-      }
     }
 
     p {
       margin: 6px 0 0;
       color: $text-secondary;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
     }
   }
@@ -92,12 +89,11 @@ $transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
     label {
       display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
+      margin-bottom: 5px;
+      font-weight: 500;
       color: $text-primary;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-size: 12.5px;
+      letter-spacing: 0.2px;
     }
 
     .input-wrapper {
@@ -108,28 +104,27 @@ $transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
         left: 14px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 15px;
+        font-size: 14px;
         color: $text-muted;
         transition: color $transition;
       }
 
       input {
         width: 100%;
-        padding: 13px 14px 13px 42px;
-        border: 1.5px solid $border-color;
+        padding: 12px 14px 12px 40px;
+        border: 1px solid $border-color;
         border-radius: $radius-sm;
-        background: #FAFBFC;
-        font-size: 14px;
+        background: $white;
+        font-size: 13.5px;
         color: $text-primary;
         box-sizing: border-box;
-        font-family: 'DM Sans', sans-serif;
-        transition: border-color $transition, box-shadow $transition, background $transition;
+        font-family: 'Inter', sans-serif;
+        transition: border-color $transition, box-shadow $transition;
 
         &:focus {
           outline: none;
           border-color: $brand;
-          box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
-          background: $white;
+          box-shadow: 0 0 0 3px rgba(79, 107, 255, 0.12);
         }
 
         &::placeholder {
@@ -147,27 +142,27 @@ $transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
   .btn-login {
     @include flex(center, center, 8px);
     width: 100%;
-    padding: 14px;
-    background: #0F1E3C;
+    padding: 13px;
+    background: $brand;
     color: $white;
     border: none;
     border-radius: $radius-sm;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     margin-top: 8px;
     transition: background $transition, transform 0.15s ease, box-shadow $transition;
-    letter-spacing: 0.3px;
+    box-shadow: 0 2px 6px rgba(79, 107, 255, 0.25);
 
     i {
-      font-size: 14px;
+      font-size: 13px;
     }
 
     &:hover {
-      background: #1A2D54;
+      background: $brand-dark;
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(15, 30, 60, 0.30);
+      box-shadow: 0 4px 12px rgba(79, 107, 255, 0.35);
     }
 
     &:active {
@@ -190,15 +185,9 @@ $transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
         color: $brand-dark;
-        text-decoration: underline;
       }
     }
   }
-}
-
-@keyframes cardFadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 480px) {
@@ -213,10 +202,13 @@ $transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
     .logo {
       margin-bottom: 28px;
-      h1 { font-size: 26px; }
-      p { font-size: 13px; }
+      h1 { font-size: 24px; }
+      p { font-size: 12px; }
     }
 
-    .btn-login { padding: 13px; font-size: 14px; }
+    .btn-login {
+      padding: 12px;
+      font-size: 13px;
+    }
   }
 }
