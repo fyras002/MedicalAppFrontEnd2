@@ -15,6 +15,7 @@ export class DoctorPatientsComponent implements OnInit {
   patients: any[] = [];
   showNotifications = false;
   showProfileMenu = false;
+  isDarkMode = false;
   doctorName = '';
   doctorEmail = '';
   speciality = '';
@@ -30,26 +31,22 @@ export class DoctorPatientsComponent implements OnInit {
     const user = this.authService.getUser();
     this.doctorName = `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Doctor';
     this.doctorEmail = user.email || '';
-    this.loadDoctorInfo(user.id);
-    this.loadPatients();
+    this.loadMyData(user.id);
   }
 
-  loadDoctorInfo(userId: number) {
+  loadMyData(userId: number) {
     this.doctorService.getDoctorByUserId(userId).subscribe({
       next: (doctors) => {
         const doctor = doctors[0];
         if (doctor) {
           this.speciality = doctor.specialityName;
+          this.doctorService.getDoctorPatients(doctor.id).subscribe({
+            next: (patients) => {
+              this.patients = patients;
+              this.cdr.markForCheck();
+            }
+          });
         }
-      }
-    });
-  }
-
-  loadPatients() {
-    this.doctorService.getAllPatients().subscribe({
-      next: (patients) => {
-        this.patients = patients;
-        this.cdr.detectChanges();
       }
     });
   }
@@ -58,14 +55,25 @@ export class DoctorPatientsComponent implements OnInit {
     this.router.navigate(['/doctor/medical-records', patient.idPatient]);
   }
 
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    this.cdr.markForCheck();
+  }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) this.showProfileMenu = false;
+    if (this.showNotifications) {
+      this.showProfileMenu = false;
+    }
+    this.cdr.markForCheck();
   }
 
   toggleProfileMenu() {
     this.showProfileMenu = !this.showProfileMenu;
-    if (this.showProfileMenu) this.showNotifications = false;
+    if (this.showProfileMenu) {
+      this.showNotifications = false;
+    }
+    this.cdr.markForCheck();
   }
 
   logout() {

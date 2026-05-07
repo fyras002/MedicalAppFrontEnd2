@@ -14,12 +14,12 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class AdminSpecialitiesComponent implements OnInit {
   specialities: any[] = [];
-  showForm = false;
+  editingSpeciality: any = null;
   showNotifications = false;
   showProfileMenu = false;
+  isDarkMode = false;
   adminName = 'Admin User';
   adminEmail = 'admin@medicalapp.com';
-  newSpeciality = { specialityName: null, description: '' };
   private baseUrl = 'http://localhost:5039/api';
 
   constructor(
@@ -46,14 +46,25 @@ export class AdminSpecialitiesComponent implements OnInit {
     });
   }
 
-  createSpeciality() {
-    this.http.post(`${this.baseUrl}/Specialities`, this.newSpeciality).subscribe({
+  editSpeciality(speciality: any) {
+    this.editingSpeciality = { ...speciality };
+  }
+
+  updateSpeciality() {
+    const dto = {
+      description: this.editingSpeciality.description
+    };
+    this.http.put(`${this.baseUrl}/Specialities/${this.editingSpeciality.id}`, dto).subscribe({
       next: () => {
-        this.showForm = false;
-        this.newSpeciality = { specialityName: null, description: '' };
+        this.editingSpeciality = null;
+        this.cdr.detectChanges();
         this.loadSpecialities();
       }
     });
+  }
+
+  cancelEdit() {
+    this.editingSpeciality = null;
   }
 
   deleteSpeciality(id: number) {
@@ -63,6 +74,26 @@ export class AdminSpecialitiesComponent implements OnInit {
         error: () => alert('Cannot delete. It may have doctors linked.')
       });
     }
+  }
+
+  getSpecialityName(value: any): string {
+    const names: { [key: number]: string } = {
+      1: 'Cardiology', 2: 'Dermatology', 3: 'Neurology',
+      4: 'Pediatrics', 5: 'Radiology', 6: 'General Medicine',
+      7: 'Orthopedics', 8: 'Psychiatry', 9: 'Ophthalmology',
+      10: 'Gynecology', 11: 'Urology', 12: 'ENT',
+      13: 'Gastroenterology', 14: 'Pulmonology', 15: 'Nephrology',
+      16: 'Endocrinology', 17: 'Rheumatology', 18: 'Hematology',
+      19: 'Oncology', 20: 'Anesthesiology', 21: 'Emergency Medicine',
+      22: 'Pathology', 23: 'Plastic Surgery', 24: 'Vascular Surgery',
+      25: 'Neurosurgery'
+    };
+    if (typeof value === 'number') return names[value] || String(value);
+    return value || '';
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
   }
 
   toggleNotifications() {

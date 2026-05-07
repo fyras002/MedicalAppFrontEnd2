@@ -18,21 +18,12 @@ export class PatientAppointmentsComponent implements OnInit {
   doctors: any[] = [];
   showNotifications = false;
   showProfileMenu = false;
+  isDarkMode = false;
   patientName = '';
   patientEmail = '';
   private baseUrl = 'http://localhost:5039/api';
 
-  newAppointment = {
-    patientName: '',
-    patientPhone: '',
-    patientEmail: '',
-    patientGender: '',
-    symptoms: '',
-    reason: '',
-    dateTimeAppointment: '',
-    idDoctor: null,
-    idCompany: null
-  };
+  newAppointment = { patientName: '', patientPhone: '', patientEmail: '', patientGender: '', symptoms: '', reason: '', dateTimeAppointment: '', idDoctor: null, idCompany: null };
 
   constructor(
     private authService: AuthService,
@@ -55,12 +46,8 @@ export class PatientAppointmentsComponent implements OnInit {
           this.newAppointment.patientName = `${me.firstname} ${me.lastname}`;
           this.newAppointment.patientPhone = me.phone;
           this.newAppointment.patientEmail = me.email;
-          
           this.http.get<any[]>(`${this.baseUrl}/Appointments/patient/${me.idPatient}`).subscribe({
-            next: (appointments) => {
-              this.appointments = appointments;
-              this.cdr.detectChanges();
-            }
+            next: (appointments) => { this.appointments = appointments; this.cdr.markForCheck(); }
           });
         }
       }
@@ -69,10 +56,7 @@ export class PatientAppointmentsComponent implements OnInit {
 
   loadDoctors() {
     this.http.get<any[]>(`${this.baseUrl}/Doctors/available`).subscribe({
-      next: (doctors) => {
-        this.doctors = doctors;
-        this.cdr.detectChanges();
-      }
+      next: (doctors) => { this.doctors = doctors; this.cdr.markForCheck(); }
     });
   }
 
@@ -82,33 +66,27 @@ export class PatientAppointmentsComponent implements OnInit {
       next: (patients) => {
         const me = patients.find((p: any) => p.userId === user.id);
         if (me) {
-          this.http.post(`${this.baseUrl}/Appointments`, {
-            ...this.newAppointment,
-            idPatient: me.idPatient,
-            isNewPatient: false
-          }).subscribe({
-            next: () => {
-              this.showBookForm = false;
-              this.loadMyAppointments(user.id);
-              this.cdr.detectChanges();
-            }
+          this.http.post(`${this.baseUrl}/Appointments`, { ...this.newAppointment, idPatient: me.idPatient, isNewPatient: false }).subscribe({
+            next: () => { this.showBookForm = false; this.loadMyAppointments(user.id); this.cdr.markForCheck(); }
           });
         }
       }
     });
   }
 
+  toggleDarkMode() { this.isDarkMode = !this.isDarkMode; this.cdr.markForCheck(); }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) this.showProfileMenu = false;
+    if (this.showNotifications) { this.showProfileMenu = false; }
+    this.cdr.markForCheck();
   }
 
   toggleProfileMenu() {
     this.showProfileMenu = !this.showProfileMenu;
-    if (this.showProfileMenu) this.showNotifications = false;
+    if (this.showProfileMenu) { this.showNotifications = false; }
+    this.cdr.markForCheck();
   }
 
-  logout() {
-    this.authService.logout();
-  }
+  logout() { this.authService.logout(); }
 }

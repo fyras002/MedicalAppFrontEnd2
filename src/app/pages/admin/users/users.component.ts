@@ -15,6 +15,7 @@ export class AdminUsersComponent implements OnInit {
   users: any[] = [];
   showNotifications = false;
   showProfileMenu = false;
+  isDarkMode = false;
   adminName = 'Admin User';
   adminEmail = 'admin@medicalapp.com';
   notificationCount = 0;
@@ -64,6 +65,10 @@ export class AdminUsersComponent implements OnInit {
     if (role === 2) return 'Doctor';
     if (role === 3) return 'Patient';
     return 'Unknown';
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
   }
 
   toggleNotifications() {

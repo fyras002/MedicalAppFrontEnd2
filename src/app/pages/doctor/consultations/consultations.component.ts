@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { DoctorService } from '../../../services/doctor.service';
 
@@ -16,11 +17,14 @@ export class DoctorConsultationsComponent implements OnInit {
   consultations: any[] = [];
   patients: any[] = [];
   showForm = false;
+  editingConsultation: any = null;
   showNotifications = false;
   showProfileMenu = false;
+  isDarkMode = false;
   doctorName = '';
   doctorEmail = '';
   speciality = '';
+  private baseUrl = 'http://localhost:5039/api';
 
   newConsultation = {
     idPatient: null,
@@ -33,6 +37,7 @@ export class DoctorConsultationsComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private doctorService: DoctorService,
+    private http: HttpClient,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -49,19 +54,21 @@ export class DoctorConsultationsComponent implements OnInit {
         const doctor = doctors[0];
         if (doctor) {
           this.speciality = doctor.specialityName;
+          
           this.doctorService.getDoctorConsultations(doctor.id).subscribe({
             next: (consultations) => {
               this.consultations = consultations;
-              this.cdr.detectChanges();
+              this.cdr.markForCheck();
+            }
+          });
+          
+          this.doctorService.getDoctorPatients(doctor.id).subscribe({
+            next: (patients) => {
+              this.patients = patients;
+              this.cdr.markForCheck();
             }
           });
         }
-      }
-    });
-    this.doctorService.getAllPatients().subscribe({
-      next: (patients) => {
-        this.patients = patients;
-        this.cdr.detectChanges();
       }
     });
   }
@@ -80,7 +87,7 @@ export class DoctorConsultationsComponent implements OnInit {
             next: () => {
               this.showForm = false;
               this.loadData(user.id);
-              this.cdr.detectChanges();
+              this.cdr.markForCheck();
             }
           });
         }
@@ -88,14 +95,56 @@ export class DoctorConsultationsComponent implements OnInit {
     });
   }
 
+  editConsultation(consultation: any) {
+    this.editingConsultation = { ...consultation };
+  }
+
+  updateConsultation() {
+    this.http.put(`${this.baseUrl}/Consultations/${this.editingConsultation.idConsultation}`, this.editingConsultation).subscribe({
+      next: () => {
+        this.editingConsultation = null;
+        const user = this.authService.getUser();
+        this.loadData(user.id);
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  deleteConsultation(id: number) {
+    if (confirm('Delete this consultation?')) {
+      this.http.delete(`${this.baseUrl}/Consultations/${id}`).subscribe({
+        next: () => {
+          const user = this.authService.getUser();
+          this.loadData(user.id);
+          this.cdr.markForCheck();
+        }
+      });
+    }
+  }
+
+  cancelEdit() {
+    this.editingConsultation = null;
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    this.cdr.markForCheck();
+  }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) this.showProfileMenu = false;
+    if (this.showNotifications) {
+      this.showProfileMenu = false;
+    }
+    this.cdr.markForCheck();
   }
 
   toggleProfileMenu() {
     this.showProfileMenu = !this.showProfileMenu;
-    if (this.showProfileMenu) this.showNotifications = false;
+    if (this.showProfileMenu) {
+      this.showNotifications = false;
+    }
+    this.cdr.markForCheck();
   }
 
   logout() {

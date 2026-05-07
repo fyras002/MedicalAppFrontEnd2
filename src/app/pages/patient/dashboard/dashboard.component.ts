@@ -19,6 +19,7 @@ export class PatientDashboardComponent implements OnInit {
   upcomingCount = 0;
   showNotifications = false;
   showProfileMenu = false;
+  isDarkMode = false;
   private baseUrl = 'http://localhost:5039/api';
 
   constructor(
@@ -47,7 +48,7 @@ export class PatientDashboardComponent implements OnInit {
               this.upcomingCount = appointments.filter((a: any) => 
                 new Date(a.dateTimeAppointment) >= now
               ).length;
-              this.cdr.detectChanges();
+              this.cdr.markForCheck();
             }
           });
         }
@@ -55,14 +56,25 @@ export class PatientDashboardComponent implements OnInit {
     });
   }
 
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    this.cdr.markForCheck();
+  }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) this.showProfileMenu = false;
+    if (this.showNotifications) {
+      this.showProfileMenu = false;
+    }
+    this.cdr.markForCheck();
   }
 
   toggleProfileMenu() {
     this.showProfileMenu = !this.showProfileMenu;
-    if (this.showProfileMenu) this.showNotifications = false;
+    if (this.showProfileMenu) {
+      this.showNotifications = false;
+    }
+    this.cdr.markForCheck();
   }
 
   logout() {

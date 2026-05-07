@@ -1,23 +1,63 @@
 <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<div class="dashboard-container">
+<div class="dashboard-container" [class.dark-mode]="isDarkMode">
   <aside class="sidebar">
-    <div class="sidebar-header"><h2>MedicalApp</h2></div>
+    <div class="sidebar-header">
+      <div class="brand-logo">
+        <i class="fas fa-plus-circle brand-icon"></i>
+        <h2>MedicalApp</h2>
+      </div>
+    </div>
     <nav class="sidebar-nav">
-      <a routerLink="/doctor/dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
-      <a routerLink="/doctor/appointments"><i class="fas fa-calendar-alt"></i> My Appointments</a>
-      <a routerLink="/doctor/patients"><i class="fas fa-heart"></i> My Patients</a>
-      <a routerLink="/doctor/consultations"><i class="fas fa-notes-medical"></i> Consultations</a>
-      <a routerLink="/doctor/medical-records" routerLinkActive="active"><i class="fas fa-file-medical-alt"></i> Medical Records</a>
+      <a routerLink="/doctor/dashboard">
+        <span class="nav-icon-wrap"><i class="fas fa-chart-pie"></i></span>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/doctor/appointments">
+        <span class="nav-icon-wrap"><i class="fas fa-calendar-alt"></i></span>
+        <span>My Appointments</span>
+      </a>
+      <a routerLink="/doctor/patients">
+        <span class="nav-icon-wrap"><i class="fas fa-heart"></i></span>
+        <span>My Patients</span>
+      </a>
+      <a routerLink="/doctor/consultations">
+        <span class="nav-icon-wrap"><i class="fas fa-notes-medical"></i></span>
+        <span>Consultations</span>
+      </a>
+      <a routerLink="/doctor/medical-records" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <span class="nav-icon-wrap"><i class="fas fa-file-medical-alt"></i></span>
+        <span>Medical Records</span>
+      </a>
     </nav>
-    <div class="sidebar-footer"><button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+    <div class="sidebar-footer">
+      <button (click)="logout()">
+        <span class="nav-icon-wrap logout-icon"><i class="fas fa-sign-out-alt"></i></span>
+        <span>Logout</span>
+      </button>
+    </div>
   </aside>
 
   <main class="main-content">
     <header class="top-bar">
-      <h1>Medical Records</h1>
+      <div class="top-bar-left">
+        <div class="page-breadcrumb">
+          <span class="breadcrumb-parent">Doctor</span>
+          <i class="fas fa-chevron-right breadcrumb-sep"></i>
+          <span class="breadcrumb-current">Medical Records</span>
+        </div>
+        <h1>Medical Records</h1>
+      </div>
       <div class="top-bar-right">
+        <button class="dark-mode-toggle" (click)="toggleDarkMode()" [title]="isDarkMode ? 'Light Mode' : 'Dark Mode'">
+          <i class="fas" [class.fa-moon]="!isDarkMode" [class.fa-sun]="isDarkMode"></i>
+        </button>
+        <button class="add-item-btn" (click)="showAddForm = !showAddForm">
+          <i class="fas fa-plus"></i> Add Record
+        </button>
         <div class="notification-wrapper">
           <button class="notification-bell" (click)="toggleNotifications()">
             <i class="fas fa-bell"></i>
@@ -44,7 +84,6 @@
             </div>
           </div>
         </div>
-
         <div class="profile-wrapper">
           <button class="profile-trigger" (click)="toggleProfileMenu()">
             <div class="profile-avatar"><i class="fas fa-user-md"></i></div>
@@ -65,7 +104,6 @@
             </div>
           </div>
         </div>
-
         <span class="availability-badge"><i class="fas fa-circle"></i> Available</span>
         <button *ngIf="selectedPatientId" class="btn-back" (click)="selectedPatientId = null; loadMedicalRecords()">
           <i class="fas fa-arrow-left"></i> All Records
@@ -74,6 +112,72 @@
     </header>
 
     <div class="content-area">
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <p class="welcome-sub">Good day, Dr. {{ doctorName }} 👋</p>
+          <h2>Medical Records Management</h2>
+        </div>
+        <div class="welcome-badge">
+          <i class="fas fa-file-medical-alt"></i>
+          <span>{{ medicalRecords.length }} Records</span>
+        </div>
+      </div>
+
+      <div class="form-card" *ngIf="showAddForm">
+        <h3>Add Medical Record</h3>
+        <div class="form-row">
+          <input [(ngModel)]="newRecord.bloodDraw" placeholder="Blood Type" />
+          <input [(ngModel)]="newRecord.height" placeholder="Height" />
+        </div>
+        <div class="form-row">
+          <input [(ngModel)]="newRecord.weight" placeholder="Weight" />
+          <input [(ngModel)]="newRecord.medicalCheckup" placeholder="Checkup" />
+        </div>
+        <input [(ngModel)]="newRecord.hereditaryDiseases" placeholder="Hereditary Diseases" />
+        <input [(ngModel)]="newRecord.chronicDiseases" placeholder="Chronic Diseases" />
+        <div class="btn-row">
+          <button class="btn-save-primary" (click)="createRecord()"><i class="fas fa-check"></i> Create</button>
+          <button class="btn-cancel" (click)="showAddForm = false">Cancel</button>
+        </div>
+      </div>
+
+      <div class="form-card" *ngIf="editingRecord">
+        <h3>Edit Medical Record</h3>
+        <div class="form-row">
+          <input [(ngModel)]="editingRecord.bloodDraw" placeholder="Blood Type" />
+          <input [(ngModel)]="editingRecord.height" placeholder="Height" />
+        </div>
+        <div class="form-row">
+          <input [(ngModel)]="editingRecord.weight" placeholder="Weight" />
+          <input [(ngModel)]="editingRecord.medicalCheckup" placeholder="Checkup" />
+        </div>
+        <input [(ngModel)]="editingRecord.hereditaryDiseases" placeholder="Hereditary Diseases" />
+        <input [(ngModel)]="editingRecord.chronicDiseases" placeholder="Chronic Diseases" />
+        <input [(ngModel)]="editingRecord.status" placeholder="Status" />
+        <div class="btn-row">
+          <button class="btn-save-primary" (click)="updateRecord()"><i class="fas fa-check"></i> Save</button>
+          <button class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </div>
+
+      <div class="form-card" *ngIf="showDocForm">
+        <h3>Add Document</h3>
+        <input [(ngModel)]="newDocument.titleDocument" placeholder="Document Title" />
+        <input [(ngModel)]="newDocument.descriptionDocument" placeholder="Description" />
+        <div class="file-upload-wrapper">
+          <label class="file-upload-label">
+            <i class="fas fa-cloud-upload-alt"></i> Choose File
+            <input type="file" (change)="onFileSelected($event)" hidden />
+          </label>
+          <span class="file-name" *ngIf="selectedFile">{{ selectedFile.name }}</span>
+          <span class="file-name file-placeholder" *ngIf="!selectedFile">No file chosen</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn-save-primary" (click)="uploadDocument()"><i class="fas fa-check"></i> Upload</button>
+          <button class="btn-cancel" (click)="showDocForm = false">Cancel</button>
+        </div>
+      </div>
+
       <div class="records-grid">
         <div class="record-card" *ngFor="let record of medicalRecords">
           <div class="record-icon"><i class="fas fa-file-medical-alt"></i></div>
@@ -89,7 +193,19 @@
           </div>
           <div class="documents" *ngIf="record.documents && record.documents.length > 0">
             <h4><i class="fas fa-paperclip"></i> Documents</h4>
-            <p *ngFor="let doc of record.documents"><i class="fas fa-file-alt"></i> {{ doc.titleDocument }}</p>
+            <p *ngFor="let doc of record.documents">
+              <a class="doc-link" [href]="'http://localhost:5039' + doc.attachmentDocument" download>
+                <i class="fas fa-file-alt"></i> {{ doc.titleDocument }}
+              </a>
+              <button class="btn-delete-doc" (click)="deleteDocument(doc.idDocument, record)">
+                <i class="fas fa-times"></i>
+              </button>
+            </p>
+          </div>
+          <div class="btn-row">
+            <button class="btn-edit" (click)="editRecord(record)"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn-delete" (click)="deleteRecord(record.idMedicalRecord)"><i class="fas fa-trash"></i> Delete</button>
+            <button class="btn-add-doc" (click)="addDocument(record)"><i class="fas fa-upload"></i> Add Document</button>
           </div>
         </div>
       </div>

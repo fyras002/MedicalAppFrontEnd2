@@ -1,19 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700&display=swap');
 
-$brand:          #4F6BFF;
-$brand-dark:     #3A52E0;
-$brand-light:    #EEF1FF;
+$blue-primary:   #2563EB;
+$blue-dark:      #1D4ED8;
+$blue-light:     #EFF6FF;
+$blue-mid:       #BFDBFE;
+$bg:             #F4F7FD;
 $white:          #FFFFFF;
-$bg-page:        #F7F8FC;
-$text-primary:   #111827;
-$text-secondary: #6B7280;
-$text-muted:     #9CA3AF;
-$border-color:   #E5E7EB;
-$shadow-card:    0 8px 30px rgba(0, 0, 0, 0.10);
-$radius-sm:      10px;
+$text-primary:   #0F172A;
+$text-secondary: #475569;
+$text-muted:     #94A3B8;
+$border:         rgba(37, 99, 235, 0.10);
+$border-strong:  rgba(37, 99, 235, 0.18);
+$radius-sm:      8px;
 $radius-md:      14px;
 $radius-lg:      20px;
-$transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
+$transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
+$shadow-md:      0 8px 32px rgba(37, 99, 235, 0.12);
+$shadow-blue:    0 8px 24px rgba(37, 99, 235, 0.22);
 
 @mixin flex($align: center, $justify: center, $gap: 0) {
   display: flex;
@@ -22,47 +25,21 @@ $transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
   @if $gap != 0 { gap: $gap; }
 }
 
-@mixin input-reset {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid $border-color;
-  border-radius: $radius-sm;
-  background: $white;
-  font-size: 13.5px;
-  color: $text-primary;
-  box-sizing: border-box;
-  transition: border-color $transition, box-shadow $transition;
-  font-family: 'Inter', system-ui, sans-serif;
-
-  &:focus {
-    outline: none;
-    border-color: $brand;
-    box-shadow: 0 0 0 3px rgba(79, 107, 255, 0.12);
-  }
-
-  &::placeholder {
-    color: $text-muted;
-    opacity: 1;
-  }
-}
-
 .register-container {
   @include flex;
   min-height: 100vh;
-  background: $bg-page;
+  background: $bg;
   padding: 24px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   position: relative;
   overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
-    top: -120px;
-    right: -80px;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(79, 107, 255, 0.06) 0%, transparent 70%);
+    top: -180px; right: -120px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.06) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
   }
@@ -70,11 +47,9 @@ $transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
   &::after {
     content: '';
     position: absolute;
-    bottom: -100px;
-    left: -60px;
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(79, 107, 255, 0.04) 0%, transparent 70%);
+    bottom: -150px; left: -100px;
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
   }
@@ -86,22 +61,61 @@ $transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 40px 36px 32px;
   width: 100%;
   max-width: 520px;
-  box-shadow: $shadow-card;
-  border: 1px solid $border-color;
+  box-shadow: $shadow-md;
   position: relative;
   z-index: 1;
+  border: 1px solid $border;
+
+  .dark-mode-toggle {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-sm;
+    border: 1px solid $border-strong;
+    background: $white;
+    cursor: pointer;
+    @include flex;
+    transition: background $transition, border-color $transition, box-shadow $transition;
+    z-index: 2;
+
+    i {
+      font-size: 14px;
+      color: $text-muted;
+      transition: color $transition;
+    }
+
+    &:hover {
+      background: $blue-light;
+      border-color: $blue-primary;
+      i { color: $blue-primary; }
+    }
+  }
 
   .logo {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
 
-    h1 {
-      margin: 0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 28px;
-      font-weight: 800;
-      color: $text-primary;
-      letter-spacing: -0.5px;
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      .brand-icon {
+        font-size: 26px;
+        color: $blue-primary;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: 'Bricolage Grotesque', sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: $text-primary;
+        letter-spacing: -0.02em;
+      }
     }
 
     p {
@@ -115,11 +129,11 @@ $transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
   .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 14px;
   }
 
   .form-group {
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 
     label {
       display: block;
@@ -127,33 +141,70 @@ $transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
       font-weight: 500;
       color: $text-primary;
       font-size: 12.5px;
-      letter-spacing: 0.2px;
     }
 
-    input {
-      @include input-reset;
+    .input-wrapper {
+      position: relative;
+
+      i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 13px;
+        color: $text-muted;
+        transition: color $transition;
+      }
+
+      input {
+        width: 100%;
+        padding: 11px 14px 11px 38px;
+        border: 1px solid $border-strong;
+        border-radius: $radius-sm;
+        background: $white;
+        font-size: 13px;
+        color: $text-primary;
+        box-sizing: border-box;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        transition: border-color $transition, box-shadow $transition;
+
+        &:focus {
+          outline: none;
+          border-color: $blue-primary;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+        }
+
+        &::placeholder {
+          color: $text-muted;
+          opacity: 1;
+        }
+      }
+
+      &:focus-within i {
+        color: $blue-primary;
+      }
     }
   }
 
   .btn-register {
+    @include flex(center, center, 8px);
     width: 100%;
-    padding: 13px;
-    background: $brand;
+    padding: 12px;
+    background: $blue-primary;
     color: $white;
     border: none;
     border-radius: $radius-sm;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    margin-top: 10px;
-    transition: background $transition, transform 0.15s ease, box-shadow $transition;
-    box-shadow: 0 2px 6px rgba(79, 107, 255, 0.25);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    margin-top: 8px;
+    transition: background $transition, box-shadow $transition;
+    box-shadow: $shadow-blue;
 
     &:hover {
-      background: $brand-dark;
-      box-shadow: 0 4px 12px rgba(79, 107, 255, 0.35);
-      transform: translateY(-1px);
+      background: $blue-dark;
+      box-shadow: 0 8px 32px rgba(37, 99, 235, 0.28);
     }
 
     &:active {
@@ -169,13 +220,107 @@ $transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 500;
 
     a {
-      color: $brand;
+      color: $blue-primary;
       text-decoration: none;
       font-weight: 600;
       transition: color $transition;
 
       &:hover {
-        color: $brand-dark;
+        color: $blue-dark;
+      }
+    }
+  }
+}
+
+.dark-mode {
+  $dm-bg:             #0B0F1A;
+  $dm-surface:        #111827;
+  $dm-surface-2:      #1A2235;
+  $dm-border:         rgba(99, 179, 237, 0.10);
+  $dm-border-strong:  rgba(99, 179, 237, 0.18);
+  $dm-text-primary:   #E8F0FE;
+  $dm-text-secondary: #93B4D4;
+  $dm-text-muted:     #4E6A8A;
+  $dm-blue:           #60A5FA;
+  $dm-blue-bg:        rgba(96, 165, 250, 0.10);
+
+  background: $dm-bg;
+
+  &::before {
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.04) 0%, transparent 70%);
+  }
+
+  &::after {
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.03) 0%, transparent 70%);
+  }
+
+  .register-card {
+    background: $dm-surface;
+    border-color: $dm-border;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+
+    .dark-mode-toggle {
+      background: $dm-surface;
+      border-color: $dm-border-strong;
+
+      i { color: $dm-text-muted; }
+
+      &:hover {
+        background: $dm-blue-bg;
+        border-color: $dm-blue;
+        i { color: $dm-blue; }
+      }
+    }
+
+    .logo {
+      .brand-logo {
+        .brand-icon { color: $dm-blue; }
+        h1 { color: $dm-text-primary; }
+      }
+      p { color: $dm-text-secondary; }
+    }
+
+    .form-group {
+      label { color: $dm-text-primary; }
+
+      .input-wrapper {
+        i { color: $dm-text-muted; }
+
+        input {
+          background: $dm-surface-2;
+          border-color: $dm-border-strong;
+          color: $dm-text-primary;
+
+          &:focus {
+            border-color: $dm-blue;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.10);
+          }
+
+          &::placeholder { color: $dm-text-muted; }
+        }
+
+        &:focus-within i { color: $dm-blue; }
+      }
+    }
+
+    .btn-register {
+      background: $dm-blue;
+      color: $dm-bg;
+      box-shadow: 0 8px 24px rgba(96, 165, 250, 0.22);
+
+      &:hover {
+        background: lighten(#60A5FA, 8%);
+        box-shadow: 0 8px 32px rgba(96, 165, 250, 0.30);
+      }
+    }
+
+    .login-link {
+      color: $dm-text-secondary;
+
+      a {
+        color: $dm-blue;
+
+        &:hover { color: lighten(#60A5FA, 10%); }
       }
     }
   }
@@ -191,16 +336,24 @@ $transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
   .register-card {
     padding: 28px 22px 24px;
 
+    .dark-mode-toggle {
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+
+      i { font-size: 13px; }
+    }
+
     .logo {
-      margin-bottom: 24px;
+      margin-bottom: 22px;
 
-      h1 {
-        font-size: 24px;
+      .brand-logo {
+        .brand-icon { font-size: 22px; }
+        h1 { font-size: 20px; }
       }
 
-      p {
-        font-size: 12px;
-      }
+      p { font-size: 12px; }
     }
 
     .form-row {
@@ -209,20 +362,18 @@ $transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 12px;
 
-      label {
-        font-size: 11px;
-      }
+      label { font-size: 11px; }
 
-      input {
-        padding: 9px 12px;
-        font-size: 13px;
+      .input-wrapper input {
+        padding: 9px 12px 9px 34px;
+        font-size: 12px;
       }
     }
 
     .btn-register {
-      padding: 12px;
+      padding: 11px;
       font-size: 13px;
     }
 

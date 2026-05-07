@@ -1,0 +1,111 @@
+.chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background: #4F6BFF;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(79,107,255,0.3);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+        background: #3A52E0;
+    }
+}
+
+.chat-window {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 350px;
+    height: 450px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    padding: 14px 18px;
+    background: #4F6BFF;
+    color: white;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h4 { margin: 0; font-size: 15px; }
+    .btn-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+
+    .message {
+        margin-bottom: 12px;
+        padding: 10px 14px;
+        background: #F3F4F6;
+        border-radius: 12px;
+        max-width: 80%;
+
+        p { margin: 0 0 4px; font-size: 13px; }
+        span { font-size: 10px; color: #9CA3AF; }
+
+        &.sent {
+            background: #EEF1FF;
+            margin-left: auto;
+            text-align: right;
+        }
+    }
+
+    .no-messages {
+        text-align: center;
+        color: #9CA3AF;
+        padding-top: 40px;
+    }
+}
+
+.chat-input {
+    padding: 12px;
+    border-top: 1px solid #E5E7EB;
+    display: flex;
+    gap: 8px;
+
+    input {
+        flex: 1;
+        padding: 10px 14px;
+        border: 1px solid #E5E7EB;
+        border-radius: 20px;
+        font-size: 13px;
+        outline: none;
+        font-family: 'Inter', sans-serif;
+    }
+
+    button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #4F6BFF;
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+
+        &:hover { background: #3A52E0; }
+    }
+}

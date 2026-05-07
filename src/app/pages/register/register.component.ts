@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
+  isDarkMode = false;
   private baseUrl = 'http://localhost:5039/api';
 
   user = {
@@ -56,5 +57,9 @@ export class RegisterComponent {
       },
       error: () => alert('Error creating account')
     });
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
   }
 }

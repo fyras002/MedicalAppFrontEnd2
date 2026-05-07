@@ -13,6 +13,7 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   username = '';
   password = '';
+  isDarkMode = false;
 
   constructor(
     private authService: AuthService,
@@ -27,8 +28,8 @@ export class LoginComponent {
 
     this.authService.login(this.username, this.password).subscribe({
       next: (user) => {
-        if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
+        if (user && user.token) {
+          this.authService.setSession(user);
 
           if (user.role === 1) {
             this.router.navigate(['/admin/dashboard']);
@@ -36,16 +37,16 @@ export class LoginComponent {
             this.router.navigate(['/doctor/dashboard']);
           } else if (user.role === 3) {
             this.router.navigate(['/patient/dashboard']);
-          } else {
-            this.router.navigate(['/login']);
           }
-        } else {
-          alert('Invalid username or password');
         }
       },
       error: () => {
         alert('Invalid username or password');
       }
     });
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
   }
 }

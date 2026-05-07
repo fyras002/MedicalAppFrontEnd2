@@ -16,13 +16,14 @@ export class AdminDashboardComponent implements OnInit {
   totalDoctors = 0;
   totalPatients = 0;
   totalAppointments = 0;
-  
+
   recentActivities: any[] = [];
   showNotifications = false;
   showProfileMenu = false;
+  isDarkMode = false;
   adminName = 'Admin User';
   adminEmail = 'admin@medicalapp.com';
-  
+
   private baseUrl = 'http://localhost:5039/api';
 
   constructor(
@@ -41,32 +42,32 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadStats() {
-    this.http.get<any[]>(`${this.baseUrl}/Users`).subscribe(u => { 
-      this.totalUsers = u.length; 
-      this.cdr.detectChanges(); 
+    this.http.get<any[]>(`${this.baseUrl}/Users`).subscribe(u => {
+      this.totalUsers = u.length;
+      this.cdr.detectChanges();
     });
-    
-    this.http.get<any[]>(`${this.baseUrl}/Doctors`).subscribe(d => { 
-      this.totalDoctors = d.length; 
-      this.cdr.detectChanges(); 
+
+    this.http.get<any[]>(`${this.baseUrl}/Doctors`).subscribe(d => {
+      this.totalDoctors = d.length;
+      this.cdr.detectChanges();
     });
-    
-    this.http.get<any[]>(`${this.baseUrl}/Patients`).subscribe(p => { 
-      this.totalPatients = p.length; 
-      this.cdr.detectChanges(); 
+
+    this.http.get<any[]>(`${this.baseUrl}/Patients`).subscribe(p => {
+      this.totalPatients = p.length;
+      this.cdr.detectChanges();
     });
-    
-    this.http.get<any[]>(`${this.baseUrl}/Appointments`).subscribe(a => { 
-      this.totalAppointments = a.length; 
-      this.cdr.detectChanges(); 
+
+    this.http.get<any[]>(`${this.baseUrl}/Appointments`).subscribe(a => {
+      this.totalAppointments = a.length;
+      this.cdr.detectChanges();
     });
-    
+
     this.loadRecentActivities();
   }
 
   loadRecentActivities() {
     const activities: any[] = [];
-    
+
     this.http.get<any[]>(`${this.baseUrl}/Patients`).subscribe(patients => {
       patients.slice(0, 3).forEach((p, index) => {
         activities.push({
@@ -77,7 +78,7 @@ export class AdminDashboardComponent implements OnInit {
           timeValue: new Date().getTime() - (index * 3600000)
         });
       });
-      
+
       this.http.get<any[]>(`${this.baseUrl}/Doctors`).subscribe(doctors => {
         doctors.slice(0, 2).forEach((d, index) => {
           activities.push({
@@ -88,12 +89,12 @@ export class AdminDashboardComponent implements OnInit {
             timeValue: new Date().getTime() - ((index + 1) * 7200000)
           });
         });
-        
+
         this.http.get<any[]>(`${this.baseUrl}/Appointments`).subscribe(appointments => {
           const sorted = appointments
             .filter(a => a.dateTimeAppointment)
             .sort((a, b) => new Date(b.dateTimeAppointment).getTime() - new Date(a.dateTimeAppointment).getTime());
-          
+
           sorted.slice(0, 3).forEach(a => {
             activities.push({
               icon: 'fa-calendar-check',
@@ -103,12 +104,12 @@ export class AdminDashboardComponent implements OnInit {
               timeValue: new Date(a.dateTimeAppointment).getTime()
             });
           });
-          
+
           this.http.get<any[]>(`${this.baseUrl}/Consultations`).subscribe(consultations => {
             const sortedCons = consultations
               .filter(c => c.myDateTime)
               .sort((a, b) => new Date(b.myDateTime).getTime() - new Date(a.myDateTime).getTime());
-            
+
             sortedCons.slice(0, 2).forEach(c => {
               activities.push({
                 icon: 'fa-notes-medical',
@@ -118,13 +119,13 @@ export class AdminDashboardComponent implements OnInit {
                 timeValue: new Date(c.myDateTime).getTime()
               });
             });
-            
+
             activities.sort((a, b) => b.timeValue - a.timeValue);
-            
+
             activities.forEach(a => {
               a.time = this.getTimeAgo(new Date(a.timeValue));
             });
-            
+
             this.recentActivities = activities.slice(0, 6);
             this.cdr.detectChanges();
           });
@@ -139,12 +140,16 @@ export class AdminDashboardComponent implements OnInit {
     const diffMins = Math.round(diffMs / 60000);
     const diffHours = Math.round(diffMs / 3600000);
     const diffDays = Math.round(diffMs / 86400000);
-    
+
     if (diffMins < 1) return 'Just now';
     if (diffMins < 60) return `${diffMins} min ago`;
     if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
     if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
     return date.toLocaleDateString();
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
   }
 
   toggleNotifications() {

@@ -15,6 +15,7 @@ export class PatientMedicalRecordsComponent implements OnInit {
   medicalRecord: any = null;
   showNotifications = false;
   showProfileMenu = false;
+  isDarkMode = false;
   patientName = '';
   patientEmail = '';
   private baseUrl = 'http://localhost:5039/api';
@@ -40,11 +41,11 @@ export class PatientMedicalRecordsComponent implements OnInit {
           this.http.get<any>(`${this.baseUrl}/MedicalRecords/patient/${me.idPatient}`).subscribe({
             next: (record) => {
               this.medicalRecord = record;
-              this.cdr.detectChanges();
+              this.cdr.markForCheck();
             },
             error: () => {
               this.medicalRecord = null;
-              this.cdr.detectChanges();
+              this.cdr.markForCheck();
             }
           });
         }
@@ -52,14 +53,25 @@ export class PatientMedicalRecordsComponent implements OnInit {
     });
   }
 
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    this.cdr.markForCheck();
+  }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) this.showProfileMenu = false;
+    if (this.showNotifications) {
+      this.showProfileMenu = false;
+    }
+    this.cdr.markForCheck();
   }
 
   toggleProfileMenu() {
     this.showProfileMenu = !this.showProfileMenu;
-    if (this.showProfileMenu) this.showNotifications = false;
+    if (this.showProfileMenu) {
+      this.showNotifications = false;
+    }
+    this.cdr.markForCheck();
   }
 
   logout() {

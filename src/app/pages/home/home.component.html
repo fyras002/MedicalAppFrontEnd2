@@ -1,0 +1,267 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="home-wrapper">
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="brand-logo">
+        <i class="fas fa-plus-circle brand-icon"></i>
+        <span>MedicalApp</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link active">Home</a></li>
+        <li><a href="#" class="nav-link">About Us</a></li>
+        <li><a href="#" class="nav-link">Our Services</a></li>
+        <li><a href="#" class="nav-link">Specialists</a></li>
+        <li><a href="#" class="nav-link">Contact</a></li>
+      </ul>
+      <button class="btn-book" routerLink="/login">
+        <i class="fas fa-calendar-plus"></i>
+        Book a Meeting
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-left">
+        <span class="hero-tag"><i class="fas fa-certificate"></i> Certified Medical Professionals</span>
+        <h1>Dedicated to Long Term Health and Well-Being</h1>
+        <p class="hero-desc">
+          At MedicalApp, our patient-focused medical care is backed by experienced doctors, modern technology, and evidence-based practices to deliver the best outcomes.
+        </p>
+        <button class="btn-primary" routerLink="/login">
+          Get Started Now <i class="fas fa-arrow-right"></i>
+        </button>
+
+        <!-- Search bar -->
+        <div class="hero-search">
+          <div class="search-field">
+            <i class="fas fa-calendar-alt search-icon"></i>
+            <div>
+              <span class="search-label">Date</span>
+              <span class="search-val">Flexible</span>
+            </div>
+          </div>
+          <div class="search-divider"></div>
+          <div class="search-field">
+            <i class="fas fa-stethoscope search-icon"></i>
+            <div>
+              <span class="search-label">Specialist</span>
+              <span class="search-val">All Specialities</span>
+            </div>
+          </div>
+          <div class="search-divider"></div>
+          <div class="search-field">
+            <i class="fas fa-map-marker-alt search-icon"></i>
+            <div>
+              <span class="search-label">Location</span>
+              <span class="search-val">Tunisia</span>
+            </div>
+          </div>
+          <button class="btn-search" routerLink="/login">
+            <i class="fas fa-search"></i> Search Doctor
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-img-wrap">
+          <div class="hero-img-bg"></div>
+          <div class="hero-img-placeholder">
+            <i class="fas fa-user-md hero-doctor-icon"></i>
+          </div>
+          <div class="hero-badge">
+            <div class="badge-avatars">
+              <div class="badge-avatar"><i class="fas fa-user"></i></div>
+              <div class="badge-avatar"><i class="fas fa-user"></i></div>
+              <div class="badge-avatar"><i class="fas fa-user"></i></div>
+            </div>
+            <div class="badge-text">
+              <span class="badge-num">5.1k+</span>
+              <span class="badge-sub">Trusted by Happy Patients For Exceptional Care</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS ── -->
+  <section class="stats-section">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <span class="stat-num">{{ totalPatients }}<span class="stat-plus">+</span></span>
+        <p>Patients Registered</p>
+        <span class="stat-desc">Committed to providing quality healthcare for everyone</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">{{ totalDoctors }}<span class="stat-plus">+</span></span>
+        <p>Expert Doctors</p>
+        <span class="stat-desc">A dedicated team of specialists across multiple fields</span>
+      </div>
+      <div class="stat-center-img">
+        <div class="stat-img-placeholder">
+          <i class="fas fa-user-md stat-img-icon"></i>
+        </div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">{{ totalAppointments }}<span class="stat-plus">+</span></span>
+        <p>Appointments</p>
+        <span class="stat-desc">Successfully managed consultations and treatments</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">24<span class="stat-plus">/7</span></span>
+        <p>Online Access</p>
+        <span class="stat-desc">Book appointments and chat with doctors anytime</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── OUR EXPERTS ── -->
+  <section class="experts-section">
+    <div class="section-container">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">Meet Our Team</span>
+          <h2>Our Experts</h2>
+        </div>
+      </div>
+
+      <div class="doctors-grid">
+        <div class="doctor-card" *ngFor="let doc of doctors">
+          <div class="doctor-img">
+            <img
+              [src]="doc.photoUrl ? doc.photoUrl : 'https://ui-avatars.com/api/?name=' + doc.fullName + '&background=EFF6FF&color=2563EB&size=200&bold=true&font-size=0.4'"
+              [alt]="doc.fullName"
+            >
+          </div>
+          <div class="doctor-info">
+            <h4>{{ doc.fullName }}</h4>
+            <span class="doctor-specialty">{{ doc.specialityName }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TRUST / TESTIMONIAL ── -->
+  <section class="trust-section">
+    <div class="section-container trust-inner">
+      <div class="trust-left">
+        <span class="section-tag">Patient Stories</span>
+        <h2>See Why Patients Trust Us</h2>
+        <div class="testimonial-card">
+          <p class="testimonial-text">
+            "MedicalApp has transformed how I manage my healthcare. Booking appointments is seamless, the chat feature lets me reach my doctor instantly, and I always feel cared for."
+          </p>
+          <div class="testimonial-footer">
+            <div class="reviewer-avatar"><i class="fas fa-user"></i></div>
+            <div>
+              <span class="reviewer-name">Khaled Ibn Al Walid</span>
+              <div class="stars">
+                <i class="fas fa-star" *ngFor="let s of [1,2,3,4,5]"></i>
+                <span class="rating-val">5.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trust-right">
+        <div class="trust-img-placeholder">
+          <i class="fas fa-user-nurse trust-img-icon"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SPECIALIZED CARE OPTIONS ── -->
+  <section class="care-section">
+    <div class="section-container care-inner">
+      <div class="care-left">
+        <span class="section-tag">What We Offer</span>
+        <h2>Specialized Care Options</h2>
+        <div class="care-list">
+          <div class="care-item" *ngFor="let item of careOptions; let i = index"
+               [class.care-item--active]="i === 0">
+            <div class="care-item-icon">
+              <i class="fas {{ item.icon }}"></i>
+            </div>
+            <span>{{ item.label }}</span>
+            <i class="fas fa-chevron-right care-arrow"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="care-right">
+        <div class="care-img-placeholder">
+          <i class="fas fa-user-md care-img-icon"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="brand-logo">
+          <i class="fas fa-plus-circle brand-icon"></i>
+          <span>MedicalApp</span>
+        </div>
+        <p>Your trusted partner for comprehensive healthcare management and patient care excellence.</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>General</h5>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>About</h5>
+        <ul>
+          <li><a href="#">Our Team</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Sitemap</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Social</h5>
+        <ul>
+          <li><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+          <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+          <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+          <li><a href="#"><i class="fab fa-linkedin-in"></i> LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 MedicalApp. All Rights Reserved.</span>
+      <span>Privacy Policy · Terms of Service</span>
+    </div>
+  </footer>
+
+</div>

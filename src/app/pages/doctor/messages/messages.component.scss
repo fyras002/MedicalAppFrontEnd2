@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700&display=swap');
+
+$blue-primary:   #2563EB;
+$blue-light:     #EFF6FF;
+$blue-mid:       #BFDBFE;
+$blue-dark:      #1D4ED8;
+$bg:             #F4F7FD;
+$white:          #FFFFFF;
+$text-primary:   #0F172A;
+$text-secondary: #475569;
+$text-muted:     #94A3B8;
+$border:         rgba(37, 99, 235, 0.10);
+$border-strong:  rgba(37, 99, 235, 0.18);
+
+$sidebar-w:  272px;
+$topbar-h:   72px;
+$radius-sm:  8px;
+$radius-md:  14px;
+$transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+
+.dashboard-container {
+  display: flex; min-height: 100vh; background: $bg;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: $text-primary;
+}
+
+.sidebar {
+  width: $sidebar-w; background: $white;
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; height: 100vh; z-index: 200;
+  border-right: 1px solid $border; box-shadow: 4px 0 24px rgba(37, 99, 235, 0.06);
+
+  .sidebar-header { padding: 24px 22px 20px; border-bottom: 1px solid $border; .brand-logo { display: flex; align-items: center; gap: 10px; .brand-icon { font-size: 22px; color: $blue-primary; } h2 { margin: 0; font-size: 16px; font-weight: 700; } } }
+  .sidebar-nav { flex: 1; padding: 18px 14px 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px;
+    a { display: flex; align-items: center; gap: 10px; color: $text-secondary; text-decoration: none; padding: 10px 12px; border-radius: $radius-sm; font-size: 13.5px; font-weight: 500; transition: color $transition, background $transition; .nav-icon-wrap { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; i { font-size: 13px; color: $text-muted; } }
+      &:hover { color: $blue-primary; background: $blue-light; .nav-icon-wrap { background: rgba(37, 99, 235, 0.10); i { color: $blue-primary; } } }
+      &.active { color: $blue-primary; background: $blue-light; font-weight: 600; box-shadow: inset 3px 0 0 $blue-primary; .nav-icon-wrap { background: $blue-primary; i { color: $white; } } }
+    }
+  }
+  .sidebar-footer { padding: 14px; border-top: 1px solid $border;
+    button { width: 100%; padding: 10px 12px; background: transparent; color: $text-secondary; border: none; border-radius: $radius-sm; cursor: pointer; font-size: 13.5px; font-weight: 500; display: flex; align-items: center; gap: 10px; .nav-icon-wrap { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; i { font-size: 13px; color: $text-muted; } }
+      &:hover { color: #EF4444; background: #FEF2F2; .nav-icon-wrap { background: #FEE2E2; i { color: #EF4444; } } }
+    }
+  }
+}
+
+.main-content { flex: 1; display: flex; flex-direction: column; min-height: 100vh; margin-left: $sidebar-w; }
+.top-bar { background: $white; padding: 0 32px; height: $topbar-h; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid $border; position: sticky; top: 0; z-index: 100;
+  .top-bar-left { display: flex; flex-direction: column; gap: 2px; }
+  .page-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 11px; color: $text-muted; .breadcrumb-current { color: $blue-primary; font-weight: 600; } }
+  h1 { margin: 0; font-size: 20px; font-weight: 700; color: $text-primary; }
+}
+.content-area { padding: 30px 32px; flex: 1; }
+
+.messages-layout { display: flex; height: calc(100vh - 200px); background: $white; border-radius: $radius-md; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden; }
+
+.chat-list { width: 300px; border-right: 1px solid $border; display: flex; flex-direction: column; }
+.chat-list-header { padding: 16px 20px; border-bottom: 1px solid $border; h2 { margin: 0; font-size: 15px; font-weight: 700; } }
+.chat-list-items { flex: 1; overflow-y: auto; }
+.chat-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid rgba(0,0,0,0.04); &:hover { background: $blue-light; } &.active { background: $blue-light; border-left: 3px solid $blue-primary; } }
+.chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: $blue-light; display: flex; align-items: center; justify-content: center; flex-shrink: 0; i { font-size: 18px; color: $blue-primary; } }
+.chat-info { flex: 1; .chat-name { display: block; font-size: 13px; font-weight: 600; } .chat-preview { font-size: 11px; color: $text-muted; } }
+.no-chats { padding: 40px; text-align: center; color: $text-muted; }
+
+.chat-window { flex: 1; display: flex; flex-direction: column; }
+.chat-window-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid $border; .chat-window-user { display: flex; align-items: center; gap: 10px; font-weight: 600; } .btn-close { background: none; border: none; font-size: 22px; cursor: pointer; color: $text-muted; &:hover { color: #EF4444; } } }
+.chat-window-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.message { max-width: 70%; padding: 10px 14px; border-radius: 12px; background: #F3F4F6; p { margin: 0 0 3px; font-size: 13px; } span { font-size: 10px; color: $text-muted; } &.sent { background: $blue-light; margin-left: auto; } }
+.no-messages { text-align: center; color: $text-muted; padding-top: 60px; }
+.chat-window-input { display: flex; gap: 8px; padding: 14px 20px; border-top: 1px solid $border; input { flex: 1; padding: 10px 16px; border: 1px solid $border-strong; border-radius: 20px; font-size: 13px; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; } button { width: 38px; height: 38px; border-radius: 50%; background: $blue-primary; color: white; border: none; cursor: pointer; &:hover { background: $blue-dark; } } }
+.no-chat-selected { flex: 1; display: flex; align-items: center; justify-content: center; .empty-state { text-align: center; color: $text-muted; i { font-size: 56px; margin-bottom: 14px; } h3 { font-size: 18px; color: $text-secondary; } } }

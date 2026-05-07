@@ -21,6 +21,7 @@ export class AdminAppointmentsComponent implements OnInit {
   editingAppointment: any = null;
   showNotifications = false;
   showProfileMenu = false;
+  isDarkMode = false;
   adminName = 'Admin User';
   adminEmail = 'admin@medicalapp.com';
   private baseUrl = 'http://localhost:5039/api';
@@ -77,14 +78,22 @@ export class AdminAppointmentsComponent implements OnInit {
 
   cancelEdit() { this.editingAppointment = null; }
 
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+  }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) this.showProfileMenu = false;
+    if (this.showNotifications) {
+      this.showProfileMenu = false;
+    }
   }
 
   toggleProfileMenu() {
     this.showProfileMenu = !this.showProfileMenu;
-    if (this.showProfileMenu) this.showNotifications = false;
+    if (this.showProfileMenu) {
+      this.showNotifications = false;
+    }
   }
 
   logout() { this.authService.logout(); }

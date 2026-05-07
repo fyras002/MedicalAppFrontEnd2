@@ -15,12 +15,16 @@ import { DoctorAppointmentsComponent } from './pages/doctor/appointments/appoint
 import { DoctorPatientsComponent } from './pages/doctor/patients/patients.component';
 import { DoctorConsultationsComponent } from './pages/doctor/consultations/consultations.component';
 import { DoctorMedicalRecordsComponent } from './pages/doctor/medical-records/medical-records.component';
+import { DoctorMessagesComponent } from './pages/doctor/messages/messages.component';
 import { PatientDashboardComponent } from './pages/patient/dashboard/dashboard.component';
 import { PatientAppointmentsComponent } from './pages/patient/appointments/appointments.component';
 import { PatientMedicalRecordsComponent } from './pages/patient/medical-records/medical-records.component';
+import { PatientMessagesComponent } from './pages/patient/messages/messages.component';
+import { HomeComponent } from './pages/home/home.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
@@ -37,7 +41,7 @@ export const routes: Routes = [
       { path: 'specialities', component: AdminSpecialitiesComponent, canActivate: [RoleGuard], data: { role: 1 } },
     ]
   },
-  
+
   {
     path: 'doctor',
     canActivate: [AuthGuard],
@@ -48,9 +52,10 @@ export const routes: Routes = [
       { path: 'consultations', component: DoctorConsultationsComponent, canActivate: [RoleGuard], data: { role: 2 } },
       { path: 'medical-records', component: DoctorMedicalRecordsComponent, canActivate: [RoleGuard], data: { role: 2 } },
       { path: 'medical-records/:patientId', component: DoctorMedicalRecordsComponent, canActivate: [RoleGuard], data: { role: 2 } },
+      { path: 'messages', component: DoctorMessagesComponent, canActivate: [RoleGuard], data: { role: 2 } },
     ]
   },
-  
+
   {
     path: 'patient',
     canActivate: [AuthGuard],
@@ -58,8 +63,9 @@ export const routes: Routes = [
       { path: 'dashboard', component: PatientDashboardComponent, canActivate: [RoleGuard], data: { role: 3 } },
       { path: 'appointments', component: PatientAppointmentsComponent, canActivate: [RoleGuard], data: { role: 3 } },
       { path: 'medical-records', component: PatientMedicalRecordsComponent, canActivate: [RoleGuard], data: { role: 3 } },
+      { path: 'messages', component: PatientMessagesComponent, canActivate: [RoleGuard], data: { role: 3 } },
     ]
   },
-  
-  { path: '**', redirectTo: '/login' }
+
+  { path: '**', redirectTo: '/login' },
 ];
