@@ -23,12 +23,23 @@ export class HomeComponent implements OnInit {
     { icon: 'fa-comments', label: 'Doctor-Patient Chat' },
   ];
 
-  constructor(private http: HttpClient,private cdr :ChangeDetectorRef) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.http.get<any[]>('http://localhost:5039/api/Doctors').subscribe({
       next: (data) => {
-        this.doctors = data.slice(0, 4);
+        const topDoctors = data.slice(0, 4);
+        topDoctors.forEach(doc => {
+          if (doc.userId) {
+            this.http.get<any>(`http://localhost:5039/api/Users/${doc.userId}`).subscribe(user => {
+              doc.photoUrl = user.photo 
+                ? `http://localhost:5039${user.photo}` 
+                : null;
+              this.cdr.markForCheck();
+            });
+          }
+        });
+        this.doctors = topDoctors;
         this.totalDoctors = data.length;
         this.cdr.markForCheck();
       }

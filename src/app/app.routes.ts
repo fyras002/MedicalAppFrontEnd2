@@ -16,11 +16,16 @@ import { DoctorPatientsComponent } from './pages/doctor/patients/patients.compon
 import { DoctorConsultationsComponent } from './pages/doctor/consultations/consultations.component';
 import { DoctorMedicalRecordsComponent } from './pages/doctor/medical-records/medical-records.component';
 import { DoctorMessagesComponent } from './pages/doctor/messages/messages.component';
+import { DoctorHealthCourseComponent } from './pages/doctor/health-course/health-course.component';
 import { PatientDashboardComponent } from './pages/patient/dashboard/dashboard.component';
 import { PatientAppointmentsComponent } from './pages/patient/appointments/appointments.component';
 import { PatientMedicalRecordsComponent } from './pages/patient/medical-records/medical-records.component';
 import { PatientMessagesComponent } from './pages/patient/messages/messages.component';
+import { PatientAiChatComponent } from './pages/patient/ai-chat/ai-chat.component';
+import { PatientHealthTipsComponent } from './pages/patient/health-tips/health-tips.component';
 import { HomeComponent } from './pages/home/home.component';
+import { MedicationListComponent } from './pages/doctor/medication-list/medication-list.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -53,6 +58,8 @@ export const routes: Routes = [
       { path: 'medical-records', component: DoctorMedicalRecordsComponent, canActivate: [RoleGuard], data: { role: 2 } },
       { path: 'medical-records/:patientId', component: DoctorMedicalRecordsComponent, canActivate: [RoleGuard], data: { role: 2 } },
       { path: 'messages', component: DoctorMessagesComponent, canActivate: [RoleGuard], data: { role: 2 } },
+      { path: 'health-course', component: DoctorHealthCourseComponent, canActivate: [RoleGuard], data: { role: 2 } },
+      { path: 'medications', component: MedicationListComponent, canActivate: [RoleGuard], data: { role: 2 } },
     ]
   },
 
@@ -64,6 +71,8 @@ export const routes: Routes = [
       { path: 'appointments', component: PatientAppointmentsComponent, canActivate: [RoleGuard], data: { role: 3 } },
       { path: 'medical-records', component: PatientMedicalRecordsComponent, canActivate: [RoleGuard], data: { role: 3 } },
       { path: 'messages', component: PatientMessagesComponent, canActivate: [RoleGuard], data: { role: 3 } },
+      { path: 'ai-chat', component: PatientAiChatComponent, canActivate: [RoleGuard], data: { role: 3 } },
+      { path: 'health-tips', component: PatientHealthTipsComponent, canActivate: [RoleGuard], data: { role: 3 } },
     ]
   },
 

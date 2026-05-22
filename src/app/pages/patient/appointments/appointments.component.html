@@ -24,6 +24,18 @@
         <span class="nav-icon-wrap"><i class="fas fa-file-medical-alt"></i></span>
         <span>Medical Records</span>
       </a>
+      <a routerLink="/patient/messages" routerLinkActive="active">
+        <span class="nav-icon-wrap"><i class="fas fa-comments"></i></span>
+        <span>Messages</span>
+      </a>
+      <a routerLink="/patient/ai-chat" routerLinkActive="active">
+        <span class="nav-icon-wrap"><i class="fas fa-robot"></i></span>
+        <span>AI Assistant</span>
+      </a>
+      <a routerLink="/patient/health-tips" routerLinkActive="active">
+        <span class="nav-icon-wrap"><i class="fas fa-lightbulb"></i></span>
+        <span>Health Tips</span>
+      </a>
     </nav>
     <div class="sidebar-footer">
       <button (click)="logout()">
@@ -118,10 +130,15 @@
         <button class="btn-save" (click)="bookAppointment()"><i class="fas fa-check"></i> Confirm Booking</button>
       </div>
 
+      <div class="simple-search">
+        <i class="fas fa-search"></i>
+        <input [(ngModel)]="searchTerm" (input)="applyFilter()" placeholder="Seach by Date , Doctor name , Reason example May 6,2026 or  Sarah or Confirmed...">
+      </div>
+
       <div class="recent-activity">
         <div class="section-header">
           <h2>All Appointments</h2>
-          <span class="section-badge">{{ appointments.length }} total</span>
+          <span class="section-badge">{{ filteredAppointments.length }} results</span>
         </div>
         <table>
           <thead>
@@ -129,15 +146,18 @@
               <th>Date</th>
               <th>Time</th>
               <th>Doctor</th>
+              <th>Symptoms</th>
               <th>Reason</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let app of appointments">
+            <tr *ngFor="let app of displayedAppointments">
               <td>{{ app.dateTimeAppointment | date:'mediumDate' }}</td>
               <td>{{ app.dateTimeAppointment | date:'shortTime' }}</td>
               <td>{{ app.doctorFullName }}</td>
+              <td>{{ app.symptoms || '-' }}</td>
               <td>{{ app.reason }}</td>
               <td>
                 <span class="status-badge" [ngClass]="{
@@ -147,12 +167,27 @@
                   'status-cancelled': app.status === 'Cancelled'
                 }">{{ app.status || 'Pending' }}</span>
               </td>
+              <td>
+                <button class="btn-cancel" *ngIf="app.status === 'Pending' || app.status === 'Confirmed'" 
+                        (click)="cancelAppointment(app.idAppointment)">
+                  <i class="fas fa-times"></i> Cancel
+                </button>
+              </td>
             </tr>
-            <tr *ngIf="appointments.length === 0">
-              <td colspan="5" class="no-data">No appointments found</td>
+            <tr *ngIf="displayedAppointments.length === 0">
+              <td colspan="7" class="no-data">No appointments found</td>
             </tr>
           </tbody>
         </table>
+
+        <div class="simple-pagination" *ngIf="totalPages > 1">
+          <button (click)="prevPage()" [disabled]="currentPage === 1">
+            ← Previous
+          </button>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+            Next →
+          </button>
+        </div>
       </div>
     </div>
   </main>

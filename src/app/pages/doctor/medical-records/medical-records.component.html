@@ -32,6 +32,18 @@
         <span class="nav-icon-wrap"><i class="fas fa-file-medical-alt"></i></span>
         <span>Medical Records</span>
       </a>
+      <a routerLink="/doctor/medications" routerLinkActive="active">
+        <span class="nav-icon-wrap"><i class="fas fa-pills"></i></span>
+        <span>Medications</span>
+      </a>
+      <a routerLink="/doctor/messages" routerLinkActive="active">
+        <span class="nav-icon-wrap"><i class="fas fa-comments"></i></span>
+        <span>Messages</span>
+      </a>
+      <a routerLink="/doctor/health-course" routerLinkActive="active">
+        <span class="nav-icon-wrap"><i class="fas fa-lightbulb"></i></span>
+        <span>Health Course</span>
+      </a>
     </nav>
     <div class="sidebar-footer">
       <button (click)="logout()">
@@ -55,7 +67,7 @@
         <button class="dark-mode-toggle" (click)="toggleDarkMode()" [title]="isDarkMode ? 'Light Mode' : 'Dark Mode'">
           <i class="fas" [class.fa-moon]="!isDarkMode" [class.fa-sun]="isDarkMode"></i>
         </button>
-        <button class="add-item-btn" (click)="showAddForm = !showAddForm">
+        <button class="add-item-btn" (click)="showAddForm = !showAddForm; editingRecord = null; showPrescriptionForm = false">
           <i class="fas fa-plus"></i> Add Record
         </button>
         <div class="notification-wrapper">
@@ -126,15 +138,29 @@
       <div class="form-card" *ngIf="showAddForm">
         <h3>Add Medical Record</h3>
         <div class="form-row">
-          <input [(ngModel)]="newRecord.bloodDraw" placeholder="Blood Type" />
-          <input [(ngModel)]="newRecord.height" placeholder="Height" />
+          <input [(ngModel)]="newRecord.bloodDraw" placeholder="Blood Draw" />
+          <input [(ngModel)]="newRecord.bloodType" placeholder="Blood Group (A+, O-)" />
         </div>
         <div class="form-row">
+          <input [(ngModel)]="newRecord.height" placeholder="Height" />
           <input [(ngModel)]="newRecord.weight" placeholder="Weight" />
-          <input [(ngModel)]="newRecord.medicalCheckup" placeholder="Checkup" />
         </div>
+        <div class="form-row">
+          <input [(ngModel)]="newRecord.allergies" placeholder="Allergies" />
+          <input [(ngModel)]="newRecord.smokingStatus" placeholder="Smoking Status" />
+        </div>
+        <div class="form-row">
+          <input [(ngModel)]="newRecord.alcoholConsumption" placeholder="Alcohol Consumption" />
+          <input [(ngModel)]="newRecord.exerciseFrequency" placeholder="Exercise Frequency" />
+        </div>
+        <div class="form-row">
+          <input [(ngModel)]="newRecord.dietType" placeholder="Diet Type" />
+          <input [(ngModel)]="newRecord.currentSymptoms" placeholder="Current Symptoms" />
+        </div>
+        <input [(ngModel)]="newRecord.pastSurgeries" placeholder="Past Surgeries" />
         <input [(ngModel)]="newRecord.hereditaryDiseases" placeholder="Hereditary Diseases" />
         <input [(ngModel)]="newRecord.chronicDiseases" placeholder="Chronic Diseases" />
+        <input [(ngModel)]="newRecord.medicalCheckup" placeholder="Checkup Notes" />
         <div class="btn-row">
           <button class="btn-save-primary" (click)="createRecord()"><i class="fas fa-check"></i> Create</button>
           <button class="btn-cancel" (click)="showAddForm = false">Cancel</button>
@@ -144,19 +170,49 @@
       <div class="form-card" *ngIf="editingRecord">
         <h3>Edit Medical Record</h3>
         <div class="form-row">
-          <input [(ngModel)]="editingRecord.bloodDraw" placeholder="Blood Type" />
-          <input [(ngModel)]="editingRecord.height" placeholder="Height" />
+          <input [(ngModel)]="editingRecord.bloodDraw" placeholder="Blood Draw" />
+          <input [(ngModel)]="editingRecord.bloodType" placeholder="Blood Group" />
         </div>
         <div class="form-row">
+          <input [(ngModel)]="editingRecord.height" placeholder="Height" />
           <input [(ngModel)]="editingRecord.weight" placeholder="Weight" />
-          <input [(ngModel)]="editingRecord.medicalCheckup" placeholder="Checkup" />
         </div>
+        <div class="form-row">
+          <input [(ngModel)]="editingRecord.allergies" placeholder="Allergies" />
+          <input [(ngModel)]="editingRecord.smokingStatus" placeholder="Smoking Status" />
+        </div>
+        <div class="form-row">
+          <input [(ngModel)]="editingRecord.alcoholConsumption" placeholder="Alcohol Consumption" />
+          <input [(ngModel)]="editingRecord.exerciseFrequency" placeholder="Exercise Frequency" />
+        </div>
+        <div class="form-row">
+          <input [(ngModel)]="editingRecord.dietType" placeholder="Diet Type" />
+          <input [(ngModel)]="editingRecord.currentSymptoms" placeholder="Current Symptoms" />
+        </div>
+        <input [(ngModel)]="editingRecord.pastSurgeries" placeholder="Past Surgeries" />
         <input [(ngModel)]="editingRecord.hereditaryDiseases" placeholder="Hereditary Diseases" />
         <input [(ngModel)]="editingRecord.chronicDiseases" placeholder="Chronic Diseases" />
+        <input [(ngModel)]="editingRecord.medicalCheckup" placeholder="Checkup Notes" />
         <input [(ngModel)]="editingRecord.status" placeholder="Status" />
         <div class="btn-row">
           <button class="btn-save-primary" (click)="updateRecord()"><i class="fas fa-check"></i> Save</button>
           <button class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </div>
+
+      <div class="form-card" *ngIf="showPrescriptionForm">
+        <h3>Add Prescription</h3>
+        <input [(ngModel)]="newPrescription.date" type="date" />
+        <select [(ngModel)]="newPrescription.idMedication">
+          <option [ngValue]="null" disabled>Select Medication</option>
+          <option *ngFor="let med of medicationsList" [ngValue]="med.idMedication">
+            {{ med.titleMedication }} - {{ med.dosage || 'N/A' }}
+          </option>
+        </select>
+        <input [(ngModel)]="newPrescription.medicationList" placeholder="Additional Notes" />
+        <div class="btn-row">
+          <button class="btn-save-primary" (click)="createPrescription()"><i class="fas fa-check"></i> Create</button>
+          <button class="btn-cancel" (click)="showPrescriptionForm = false">Cancel</button>
         </div>
       </div>
 
@@ -183,13 +239,30 @@
           <div class="record-icon"><i class="fas fa-file-medical-alt"></i></div>
           <h3>{{ record.patientFullName }}</h3>
           <div class="record-details">
-            <p><strong>Blood Type:</strong> {{ record.bloodDraw || 'N/A' }}</p>
+            <p><strong>Blood Draw:</strong> {{ record.bloodDraw || 'N/A' }}</p>
+            <p><strong>Blood Group:</strong> {{ record.bloodType || 'N/A' }}</p>
             <p><strong>Height:</strong> {{ record.height || 'N/A' }}</p>
             <p><strong>Weight:</strong> {{ record.weight || 'N/A' }}</p>
             <p><strong>Checkup:</strong> {{ record.medicalCheckup || 'N/A' }}</p>
             <p><strong>Chronic:</strong> {{ record.chronicDiseases || 'None' }}</p>
             <p><strong>Hereditary:</strong> {{ record.hereditaryDiseases || 'None' }}</p>
+            <p><strong>Allergies:</strong> {{ record.allergies || 'None' }}</p>
+            <p><strong>Smoking:</strong> {{ record.smokingStatus || 'N/A' }}</p>
+            <p><strong>Alcohol:</strong> {{ record.alcoholConsumption || 'N/A' }}</p>
+            <p><strong>Exercise:</strong> {{ record.exerciseFrequency || 'N/A' }}</p>
+            <p><strong>Diet:</strong> {{ record.dietType || 'N/A' }}</p>
+            <p><strong>Symptoms:</strong> {{ record.currentSymptoms || 'None' }}</p>
+            <p><strong>Past Surgeries:</strong> {{ record.pastSurgeries || 'None' }}</p>
             <p><strong>Status:</strong> <span class="status active">{{ record.status }}</span></p>
+          </div>
+          <div class="prescriptions" *ngIf="record.prescriptions && record.prescriptions.length > 0">
+            <h4><i class="fas fa-prescription"></i> Prescriptions</h4>
+            <div class="prescription-item" *ngFor="let p of record.prescriptions">
+              <p><strong>{{ p.medicationTitle || 'Medication' }}</strong></p>
+              <p><small>Doctor: {{ p.doctorName || p.docName || 'N/A' }}</small></p>
+              <p><small>Date: {{ p.date | date:'mediumDate' }}</small></p>
+              <button class="btn-delete-doc" (click)="deletePrescription(p.idPerscription)"><i class="fas fa-trash"></i></button>
+            </div>
           </div>
           <div class="documents" *ngIf="record.documents && record.documents.length > 0">
             <h4><i class="fas fa-paperclip"></i> Documents</h4>
@@ -206,6 +279,7 @@
             <button class="btn-edit" (click)="editRecord(record)"><i class="fas fa-edit"></i> Edit</button>
             <button class="btn-delete" (click)="deleteRecord(record.idMedicalRecord)"><i class="fas fa-trash"></i> Delete</button>
             <button class="btn-add-doc" (click)="addDocument(record)"><i class="fas fa-upload"></i> Add Document</button>
+            <button class="btn-add-prescription" (click)="addPrescription(record)"><i class="fas fa-prescription"></i> Prescribe</button>
           </div>
         </div>
       </div>

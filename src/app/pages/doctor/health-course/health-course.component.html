@@ -1,0 +1,199 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="dashboard-container" [class.dark-mode]="isDarkMode">
+  <aside class="sidebar">
+    <div class="sidebar-header"><div class="brand-logo"><i class="fas fa-plus-circle brand-icon"></i><h2>MedicalApp</h2></div></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/doctor/dashboard"><span class="nav-icon-wrap"><i class="fas fa-chart-pie"></i></span><span>Dashboard</span></a>
+      <a routerLink="/doctor/appointments"><span class="nav-icon-wrap"><i class="fas fa-calendar-alt"></i></span><span>My Appointments</span></a>
+      <a routerLink="/doctor/patients"><span class="nav-icon-wrap"><i class="fas fa-heart"></i></span><span>My Patients</span></a>
+      <a routerLink="/doctor/consultations"><span class="nav-icon-wrap"><i class="fas fa-notes-medical"></i></span><span>Consultations</span></a>
+      <a routerLink="/doctor/medical-records"><span class="nav-icon-wrap"><i class="fas fa-file-medical-alt"></i></span><span>Medical Records</span></a>
+      <a routerLink="/doctor/messages"><span class="nav-icon-wrap"><i class="fas fa-comments"></i></span><span>Messages</span></a>
+      <a routerLink="/doctor/health-course" routerLinkActive="active"><span class="nav-icon-wrap"><i class="fas fa-lightbulb"></i></span><span>Health Course</span></a>
+    </nav>
+    <div class="sidebar-footer"><button (click)="logout()"><span class="nav-icon-wrap"><i class="fas fa-sign-out-alt"></i></span><span>Logout</span></button></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <div class="page-breadcrumb"><span class="breadcrumb-parent">Doctor</span><i class="fas fa-chevron-right breadcrumb-sep"></i><span class="breadcrumb-current">Health Course</span></div>
+        <h1>💡 Health Course</h1>
+      </div>
+      <div class="top-bar-right">
+        <button class="dark-mode-toggle" (click)="toggleDarkMode()"><i class="fas" [class.fa-moon]="!isDarkMode" [class.fa-sun]="isDarkMode"></i></button>
+        <div class="notification-wrapper"><button class="notification-bell" (click)="toggleNotifications()"><i class="fas fa-bell"></i></button></div>
+        <div class="profile-wrapper">
+          <button class="profile-trigger" (click)="toggleProfileMenu()">
+            <div class="profile-avatar"><i class="fas fa-user-md"></i></div>
+            <div class="profile-info"><span class="profile-name">{{ doctorName }}</span><span class="profile-role">{{ speciality }}</span></div>
+            <i class="fas fa-chevron-down profile-arrow"></i>
+          </button>
+          <div class="profile-dropdown" *ngIf="showProfileMenu">
+            <div class="profile-header"><div class="profile-avatar-large"><i class="fas fa-user-md"></i></div><div class="profile-details"><h4>{{ doctorName }}</h4><p>{{ doctorEmail }}</p></div></div>
+            <div class="profile-menu-items"><a routerLink="/doctor/dashboard" (click)="showProfileMenu = false"><i class="fas fa-user-circle"></i> My Profile</a><button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+          </div>
+        </div>
+        <span class="availability-badge"><i class="fas fa-circle"></i> Available</span>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <div class="health-layout">
+        <div class="patient-list-panel">
+          <h3>Select Patient</h3>
+          <div class="patient-list">
+            <div class="patient-item" *ngFor="let p of patients" (click)="selectPatient(p)" [class.active]="selectedPatientId === p.idPatient">
+              <div class="patient-avatar"><i class="fas fa-user"></i></div>
+              <div class="patient-info"><strong>{{ p.firstname }} {{ p.lastname }}</strong><span>{{ p.email }}</span></div>
+            </div>
+            <div class="no-data" *ngIf="patients.length === 0">No patients</div>
+          </div>
+        </div>
+
+        <div class="tips-panel">
+          <div *ngIf="selectedPatientId">
+            <div class="tips-header">
+              <h3>Health Tips for {{ selectedPatientName }}</h3>
+              <div class="generate-actions">
+                <button class="btn-generate-rich" (click)="generateRichTips()" [disabled]="isGeneratingRich">
+                  <i class="fas fa-file-medical-alt"></i> {{ isGeneratingRich ? 'Generating...' : 'Generate Health Plan' }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Rich Health Plan - With Edit Mode -->
+            <div class="rich-document" *ngIf="richTips">
+              <div class="document-header">
+                <div class="header-title-section">
+                  <h3>Personalized Health Plan</h3>
+                  <div class="doc-meta">
+                    Patient: {{ selectedPatientName }} &nbsp;|&nbsp; Generated: {{ richTips.generatedAt | date:'longDate' }}
+                  </div>
+                </div>
+                <div class="header-actions" *ngIf="!isEditingRichPlan">
+                  <button class="btn-edit" (click)="startEditRichPlan()">
+                    <i class="fas fa-edit"></i> Edit Plan
+                  </button>
+                </div>
+              </div>
+
+              <!-- View Mode -->
+              <div class="document-body" *ngIf="!isEditingRichPlan">
+                <h4><i class="fas fa-apple-alt"></i> Foods Recommended</h4>
+                <ul class="section-eat">
+                  <li *ngFor="let food of richTips.foodsToEat">{{ food }}</li>
+                </ul>
+
+                <h4><i class="fas fa-exclamation-triangle"></i> Foods to Limit or Avoid</h4>
+                <ul class="section-avoid">
+                  <li *ngFor="let food of richTips.foodsToAvoid">{{ food }}</li>
+                </ul>
+
+                <h4><i class="fas fa-check-circle"></i> Lifestyle Habits to Adopt</h4>
+                <ul class="section-do">
+                  <li *ngFor="let habit of richTips.lifestyleHabitsToDo">{{ habit }}</li>
+                </ul>
+
+                <h4><i class="fas fa-times-circle"></i> Habits to Stay Away From</h4>
+                <ul class="section-dont">
+                  <li *ngFor="let habit of richTips.lifestyleHabitsToAvoid">{{ habit }}</li>
+                </ul>
+              </div>
+
+              <!-- Edit Mode -->
+              <div class="document-body edit-mode" *ngIf="isEditingRichPlan">
+                <div class="edit-section">
+                  <h4><i class="fas fa-apple-alt"></i> Foods Recommended</h4>
+                  <div class="editable-list">
+                    <div class="editable-item" *ngFor="let food of editingRichPlan.foodsToEat; let i = index; trackBy: trackByIndex">
+                      <input type="text" [(ngModel)]="editingRichPlan.foodsToEat[i]" class="edit-input" placeholder="Enter food item">
+                      <button class="btn-remove-item" (click)="removeEditItem('foodsToEat', i)" title="Remove item">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <button class="btn-add-item" (click)="addEditItem('foodsToEat')">
+                      <i class="fas fa-plus"></i> Add Food
+                    </button>
+                  </div>
+                </div>
+
+                <div class="edit-section">
+                  <h4><i class="fas fa-exclamation-triangle"></i> Foods to Limit or Avoid</h4>
+                  <div class="editable-list">
+                    <div class="editable-item" *ngFor="let food of editingRichPlan.foodsToAvoid; let i = index">
+                      <input type="text" [(ngModel)]="editingRichPlan.foodsToAvoid[i]" class="edit-input" placeholder="Enter food to avoid">
+                      <button class="btn-remove-item" (click)="removeEditItem('foodsToAvoid', i)" title="Remove item">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <button class="btn-add-item" (click)="addEditItem('foodsToAvoid')">
+                      <i class="fas fa-plus"></i> Add Food to Avoid
+                    </button>
+                  </div>
+                </div>
+
+                <div class="edit-section">
+                  <h4><i class="fas fa-check-circle"></i> Lifestyle Habits to Adopt</h4>
+                  <div class="editable-list">
+                    <div class="editable-item" *ngFor="let habit of editingRichPlan.lifestyleHabitsToDo; let i = index">
+                      <input type="text" [(ngModel)]="editingRichPlan.lifestyleHabitsToDo[i]" class="edit-input" placeholder="Enter healthy habit">
+                      <button class="btn-remove-item" (click)="removeEditItem('lifestyleHabitsToDo', i)" title="Remove item">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <button class="btn-add-item" (click)="addEditItem('lifestyleHabitsToDo')">
+                      <i class="fas fa-plus"></i> Add Habit
+                    </button>
+                  </div>
+                </div>
+
+                <div class="edit-section">
+                  <h4><i class="fas fa-times-circle"></i> Habits to Stay Away From</h4>
+                  <div class="editable-list">
+                    <div class="editable-item" *ngFor="let habit of editingRichPlan.lifestyleHabitsToAvoid; let i = index">
+                      <input type="text" [(ngModel)]="editingRichPlan.lifestyleHabitsToAvoid[i]" class="edit-input" placeholder="Enter habit to avoid">
+                      <button class="btn-remove-item" (click)="removeEditItem('lifestyleHabitsToAvoid', i)" title="Remove item">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <button class="btn-add-item" (click)="addEditItem('lifestyleHabitsToAvoid')">
+                      <i class="fas fa-plus"></i> Add Habit to Avoid
+                    </button>
+                  </div>
+                </div>
+
+                <div class="edit-actions">
+                  <button class="btn-save-edit" (click)="saveEditedRichPlan()">
+                    <i class="fas fa-save"></i> Save Changes
+                  </button>
+                  <button class="btn-cancel-edit" (click)="cancelEditRichPlan()">
+                    <i class="fas fa-times"></i> Cancel
+                  </button>
+                </div>
+              </div>
+
+              <div class="document-footer" *ngIf="!isEditingRichPlan">
+                <span class="doc-date">Generated by Dr. {{ doctorName }}</span>
+                <div class="document-actions">
+                  <button class="btn-send" (click)="sendRichTips()">
+                    <i class="fas fa-paper-plane"></i> Send to Patient
+                  </button>
+                  <button class="btn-clear" (click)="clearRichPlan()">Clear</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="no-selection" *ngIf="!selectedPatientId">
+            <i class="fas fa-lightbulb"></i>
+            <h3>Health Course</h3>
+            <p>Select a patient to generate AI health tips</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

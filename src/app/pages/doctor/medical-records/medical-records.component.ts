@@ -19,6 +19,7 @@ export class DoctorMedicalRecordsComponent implements OnInit {
   editingRecord: any = null;
   showAddForm = false;
   showDocForm = false;
+  showPrescriptionForm = false;
   showNotifications = false;
   showProfileMenu = false;
   isDarkMode = false;
@@ -26,17 +27,31 @@ export class DoctorMedicalRecordsComponent implements OnInit {
   doctorEmail = '';
   speciality = '';
   selectedFile: File | null = null;
+  selectedRecordId: number | null = null;
+  medicationsList: any[] = [];
   private doctorId: number | null = null;
   private baseUrl = 'http://localhost:5039/api';
 
   newRecord = {
     bloodDraw: '', height: '', weight: '',
-    medicalCheckup: '', hereditaryDiseases: '', chronicDiseases: '', status: 'Active'
+    medicalCheckup: '', hereditaryDiseases: '', chronicDiseases: '', status: 'Active',
+    allergies: '', bloodType: '', smokingStatus: '', alcoholConsumption: '',
+    exerciseFrequency: '', dietType: '', currentSymptoms: '', pastSurgeries: ''
   };
 
   newDocument = {
     titleDocument: '', descriptionDocument: '',
     dateDocument: new Date().toISOString(), idMedicalRecord: null as number | null
+  };
+
+  newPrescription = {
+    date: new Date().toISOString().split('T')[0],
+    docName: '',
+    medicationList: '',
+    idPatient: null as number | null,
+    idDoctor: null as number | null,
+    idMedication: null as number | null,
+    idMedicalRecord: null as number | null
   };
 
   constructor(
@@ -82,7 +97,7 @@ export class DoctorMedicalRecordsComponent implements OnInit {
     this.http.post(`${this.baseUrl}/MedicalRecords`, this.newRecord).subscribe({
       next: () => {
         this.showAddForm = false;
-        this.newRecord = { bloodDraw: '', height: '', weight: '', medicalCheckup: '', hereditaryDiseases: '', chronicDiseases: '', status: 'Active' };
+        this.newRecord = { bloodDraw: '', height: '', weight: '', medicalCheckup: '', hereditaryDiseases: '', chronicDiseases: '', status: 'Active', allergies: '', bloodType: '', smokingStatus: '', alcoholConsumption: '', exerciseFrequency: '', dietType: '', currentSymptoms: '', pastSurgeries: '' };
         this.loadMedicalRecords();
         this.cdr.markForCheck();
       }
@@ -113,7 +128,7 @@ export class DoctorMedicalRecordsComponent implements OnInit {
     if (confirm('Delete this document?')) { this.http.delete(`${this.baseUrl}/Documents/${docId}`).subscribe({ next: () => { this.loadMedicalRecords(); this.cdr.markForCheck(); } }); }
   }
 
-  editRecord(record: any) { this.editingRecord = { ...record }; }
+  editRecord(record: any) { this.editingRecord = { ...record }; this.showAddForm = false; this.showPrescriptionForm = false; }
 
   updateRecord() {
     this.http.put(`${this.baseUrl}/MedicalRecords/${this.editingRecord.idMedicalRecord}`, this.editingRecord).subscribe({
@@ -126,6 +141,49 @@ export class DoctorMedicalRecordsComponent implements OnInit {
   }
 
   cancelEdit() { this.editingRecord = null; }
+
+  addPrescription(record: any) {
+    this.selectedRecordId = record.idMedicalRecord;
+    this.newPrescription = {
+      date: new Date().toISOString().split('T')[0],
+      docName: this.doctorName,
+      medicationList: '',
+      idPatient: record.idPatient,
+      idDoctor: this.doctorId,
+      idMedication: null,
+      idMedicalRecord: record.idMedicalRecord
+    };
+    this.showPrescriptionForm = true;
+    this.showAddForm = false;
+    this.editingRecord = null;
+    this.loadMedications();
+  }
+
+  loadMedications() {
+    this.http.get<any[]>(`${this.baseUrl}/MedicationList`).subscribe({
+      next: (meds) => { this.medicationsList = meds || []; this.cdr.markForCheck(); }
+    });
+  }
+
+  createPrescription() {
+    if (!this.newPrescription.idMedication) return;
+    this.http.post(`${this.baseUrl}/Prescriptions`, this.newPrescription).subscribe({
+      next: () => {
+        this.showPrescriptionForm = false;
+        this.selectedRecordId = null;
+        this.loadMedicalRecords();
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  deletePrescription(id: number) {
+    if (confirm('Delete this prescription?')) {
+      this.http.delete(`${this.baseUrl}/Prescriptions/${id}`).subscribe({
+        next: () => { this.loadMedicalRecords(); this.cdr.markForCheck(); }
+      });
+    }
+  }
 
   toggleDarkMode() { this.isDarkMode = !this.isDarkMode; this.cdr.markForCheck(); }
 

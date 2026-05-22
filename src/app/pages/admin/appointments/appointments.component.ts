@@ -48,7 +48,8 @@ export class AdminAppointmentsComponent implements OnInit {
   }
 
   loadAll() {
-    this.http.get<any[]>(`${this.baseUrl}/Appointments`).subscribe(a => { this.appointments = a; this.cdr.detectChanges(); });
+    this.http.get<any[]>(`${this.baseUrl}/Appointments`).subscribe(a => { this.appointments = a; 
+      this.cdr.detectChanges(); });
     this.http.get<any[]>(`${this.baseUrl}/Doctors`).subscribe(d => { this.doctors = d; });
     this.http.get<any[]>(`${this.baseUrl}/Patients`).subscribe(p => { this.patients = p; });
     this.http.get<any[]>(`${this.baseUrl}/InsuranceCompany`).subscribe(c => { this.companies = c; });

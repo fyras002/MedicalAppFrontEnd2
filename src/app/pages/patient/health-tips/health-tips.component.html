@@ -1,0 +1,104 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="dashboard-container" [class.dark-mode]="isDarkMode">
+  <aside class="sidebar">
+    <div class="sidebar-header"><div class="brand-logo"><i class="fas fa-plus-circle brand-icon"></i><h2>MedicalApp</h2></div></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/patient/dashboard"><span class="nav-icon-wrap"><i class="fas fa-chart-pie"></i></span><span>Dashboard</span></a>
+      <a routerLink="/patient/appointments"><span class="nav-icon-wrap"><i class="fas fa-calendar-alt"></i></span><span>My Appointments</span></a>
+      <a routerLink="/patient/medical-records"><span class="nav-icon-wrap"><i class="fas fa-file-medical-alt"></i></span><span>Medical Records</span></a>
+      <a routerLink="/patient/messages"><span class="nav-icon-wrap"><i class="fas fa-comments"></i></span><span>Messages</span></a>
+      <a routerLink="/patient/ai-chat"><span class="nav-icon-wrap"><i class="fas fa-robot"></i></span><span>AI Assistant</span></a>
+      <a routerLink="/patient/health-tips" routerLinkActive="active"><span class="nav-icon-wrap"><i class="fas fa-lightbulb"></i></span><span>Health Tips</span></a>
+    </nav>
+    <div class="sidebar-footer"><button (click)="logout()"><span class="nav-icon-wrap"><i class="fas fa-sign-out-alt"></i></span><span>Logout</span></button></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <div class="page-breadcrumb"><span class="breadcrumb-parent">Patient</span><i class="fas fa-chevron-right breadcrumb-sep"></i><span class="breadcrumb-current">Health Tips</span></div>
+        <h1>💡 Health Tips</h1>
+      </div>
+      <div class="top-bar-right">
+        <button class="dark-mode-toggle" (click)="toggleDarkMode()"><i class="fas" [class.fa-moon]="!isDarkMode" [class.fa-sun]="isDarkMode"></i></button>
+        <div class="notification-wrapper"><button class="notification-bell" (click)="toggleNotifications()"><i class="fas fa-bell"></i></button></div>
+        <div class="profile-wrapper">
+          <button class="profile-trigger" (click)="toggleProfileMenu()">
+            <div class="profile-avatar"><i class="fas fa-user"></i></div>
+            <div class="profile-info"><span class="profile-name">{{ patientName }}</span><span class="profile-role">Patient</span></div>
+            <i class="fas fa-chevron-down profile-arrow"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <!-- Rich Health Plan -->
+      <div class="rich-document" *ngIf="hasRichPlan">
+        <div class="document-header">
+          <h3>📋 Your Personalized Health Plan</h3>
+          <div class="doc-meta">
+            Prepared by your doctor &nbsp;|&nbsp; {{ tips[0]?.sentAt | date:'longDate' }}
+          </div>
+        </div>
+
+        <div class="document-body">
+          <h4><i class="fas fa-apple-alt"></i> Foods Recommended</h4>
+          <ul class="section-eat">
+            <li *ngFor="let food of foodsToEat">{{ food }}</li>
+          </ul>
+
+          <h4><i class="fas fa-exclamation-triangle"></i> Foods to Limit or Avoid</h4>
+          <ul class="section-avoid">
+            <li *ngFor="let food of foodsToAvoid">{{ food }}</li>
+          </ul>
+
+          <h4><i class="fas fa-check-circle"></i> Lifestyle Habits to Adopt</h4>
+          <ul class="section-do">
+            <li *ngFor="let habit of lifestyleToDo">{{ habit }}</li>
+          </ul>
+
+          <h4><i class="fas fa-times-circle"></i> Habits to Stay Away From</h4>
+          <ul class="section-dont">
+            <li *ngFor="let habit of lifestyleToAvoid">{{ habit }}</li>
+          </ul>
+        </div>
+
+        <div class="document-footer">
+          <span class="doc-date">Follow these recommendations for better health</span>
+          <button class="btn-mark-read" (click)="markAllAsRead()" *ngIf="tips.length > 0">
+            <i class="fas fa-check-double"></i> Mark All as Read
+          </button>
+        </div>
+      </div>
+
+      <!-- Regular Tips (if any) -->
+      <div class="regular-tips-section" *ngIf="regularTips.length > 0">
+        <h3>Additional Tips</h3>
+        <div class="tips-grid">
+          <div class="tip-card" *ngFor="let tip of regularTips" [class.unread]="tip.status === 'Sent'">
+            <div class="tip-header">
+              <span class="tip-status" [class.read]="tip.status === 'Read'">{{ tip.status === 'Read' ? 'Read' : 'New' }}</span>
+              <span class="tip-date">{{ tip.sentAt | date:'mediumDate' }}</span>
+            </div>
+            <p class="tip-content">{{ tip.content }}</p>
+            <div class="tip-footer">
+              <span><i class="fas fa-user-md"></i> Dr. {{ tip.doctorName }}</span>
+              <button class="btn-read" *ngIf="tip.status === 'Sent'" (click)="markAsRead(tip.id)">
+                <i class="fas fa-check"></i> Mark as Read
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-data" *ngIf="tips.length === 0">
+        <i class="fas fa-lightbulb"></i>
+        <h3>No Health Tips Yet</h3>
+        <p>Your doctor hasn't sent any health tips yet. Check back later!</p>
+      </div>
+    </div>
+  </main>
+</div>

@@ -28,7 +28,6 @@ export class DoctorDashboardComponent implements OnInit {
   profilePhoto = '';
   userId = 0;
 
-  // Modal
   showProfileModal = false;
   editFirstname = '';
   editLastname = '';
@@ -54,7 +53,14 @@ export class DoctorDashboardComponent implements OnInit {
     this.username = user.lastname || 'Doctor';
     this.doctorName = `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Doctor';
     this.doctorEmail = user.email || '';
-    this.profilePhoto = user.photo || '';
+    
+    this.http.get<any>(`${this.apiUrl}/Users/${user.id}`).subscribe({
+      next: (u) => {
+        this.profilePhoto = u.photo ? `http://localhost:5039${u.photo}` : '';
+        this.cdr.markForCheck();
+      }
+    });
+    
     this.loadDoctorData(user.id);
   }
 
@@ -105,7 +111,6 @@ export class DoctorDashboardComponent implements OnInit {
     });
   }
 
-  // ── Profile Modal ──────────────────────────────────────
   openProfileModal() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.editFirstname = user.firstname || '';
@@ -142,7 +147,6 @@ export class DoctorDashboardComponent implements OnInit {
     this.saveSuccess = false;
     this.saveError = '';
 
-    // Step 1 — update name and email
     const updateDto = {
       firstname: this.editFirstname,
       lastname: this.editLastname,
@@ -151,19 +155,18 @@ export class DoctorDashboardComponent implements OnInit {
 
     this.http.put<any>(`${this.apiUrl}/Users/${this.userId}`, updateDto).subscribe({
       next: (updatedUser) => {
-        // Step 2 — upload photo if selected
         if (this.selectedPhotoFile) {
           const formData = new FormData();
           formData.append('file', this.selectedPhotoFile);
           this.http.post<any>(`${this.apiUrl}/Users/${this.userId}/upload-photo`, formData).subscribe({
             next: (res) => {
+              this.profilePhoto = res.photo ? `http://localhost:5039${res.photo}` : this.profilePhoto;
               this.updateLocalStorage(res);
               this.saving = false;
               this.saveSuccess = true;
               this.cdr.markForCheck();
             },
             error: () => {
-              // photo failed but info saved
               this.updateLocalStorage(updatedUser);
               this.saving = false;
               this.saveSuccess = true;
@@ -192,7 +195,9 @@ export class DoctorDashboardComponent implements OnInit {
     this.doctorName = `${user.firstname || ''} ${user.lastname || ''}`.trim();
     this.username = user.lastname || '';
     this.doctorEmail = user.email || '';
-    this.profilePhoto = user.photo || this.profilePhoto;
+    if (user.photo) {
+      this.profilePhoto = `http://localhost:5039${user.photo}`;
+    }
     this.cdr.markForCheck();
   }
 
